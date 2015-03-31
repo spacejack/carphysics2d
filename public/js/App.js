@@ -63,27 +63,27 @@ App.prototype.onAssetsLoaded = function()
 /**  This function gets called every frame */
 App.prototype.doFrame = function()
 {
-	var that = this;
 	var curT = Date.now();
 	var dt = curT - this.prevT;
-	if( dt <= 0 )
-	{
-		//  No time elapsed! Don't bother with this frame.
-		return;
-	}
-	if( dt > 100 )
-	{
-		//  Timestep too large - max out at 1/10th of a second.
-		this.prevT += dt - 100;
-		dt = 100;
-	}
 
-	this.game.update(dt);
-	this.game.render();
+	//  Only update/render if time has elapsed
+	if( dt > 0 )
+	{
+		if( dt > 100 )
+		{
+			//  Timestep too large - max out at 1/10th of a second.
+			this.prevT += dt - 100;
+			dt = 100;
+		}
 
-	this.prevT = curT;
+		this.game.update(dt);
+		this.game.render();
+
+		this.prevT = curT;
+	}
 
 	// Keep the animation loop going
+	var that = this;
 	requestAnimationFrame(function() {that.doFrame();});
 };
 
