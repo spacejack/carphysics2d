@@ -1,0 +1,154 @@
+html, body
+{
+	height: 100%;
+}
+
+body, td, th, input, select, button
+{
+	font-family: Candara,helvetica,arial;
+	font-size: 13px;
+}
+
+input[type=text]
+{
+	font-family: consolas,"courier new",mono;
+}
+
+body
+{
+	color: #CCC;
+	background: #333;
+	margin: 0px;
+	padding: 0px;
+}
+
+a
+{
+	color: #333;
+	font-weight: bold;
+	text-decoration: none;
+}
+a:hover
+{
+	color: #000;
+}
+
+
+.game_container
+{
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	/* flex/box betas */
+	display:-webkit-box;
+	-webkit-box-pack:center;
+	-webkit-box-align:center;
+
+	/* flex (WC3) */
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.game
+{
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	/* flex/box betas */
+	display:-webkit-box;
+	-webkit-box-pack:center;
+	-webkit-box-align:center;
+
+	/* flex (WC3) */
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.game_canvas
+{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	background: #000;
+	z-index: -1;
+}
+
+.sitenav
+{
+	font-size: 1.5em;
+	color: #000;
+	position: absolute;
+	left: 1em;
+	top: 0.5em;
+}
+
+.loading_block
+{
+	color: #222;
+	position: absolute;
+	left: 0px;
+	bottom: 25%;
+	width: 100%;
+	text-align: center;
+}
+
+.instruct_block
+{
+	color: #222;
+	font-size: 1.25em;
+	text-align: center;
+	position: absolute;
+	width: 100%;
+	left: 0px;
+	bottom: 3px;
+}
+
+.config_block
+{
+	background: rgba(0,0,0,0.5);
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+}
+
+.stats_block
+{
+	background: rgba(0,0,0,0.5);
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+}
+
+.panel_tab
+{
+	font-weight: bold;
+	padding: 0.2em 0.375em;
+	cursor: pointer;
+}
+.panel_tab:hover
+{
+	color: #EEE;
+	background: rgba(0,0,0,0.5);
+}
+.panel_table
+{
+	margin: 0.1em 0.25em;
+}
+
+td.property
+{
+	font-family: consolas,"courier new",mono;
+	text-align: left;
+}
+td.value
+{
+	font-family: consolas,"courier new",mono;
+	text-align: right;
+	min-width: 7em;
+}
