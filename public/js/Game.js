@@ -13,13 +13,31 @@ var Game = function( opts )
 	//  Acquire a drawing context from the canvas
 	this.ctx = this.canvas.getContext('2d');
 	this.canvasWidth = this.canvas.clientWidth;
-	this.canvasHeight = this.canvas.clientHeight;
+  this.canvasHeight = this.canvas.clientHeight;
+  this.map = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+  this.mapW = this.map[0].length;
+  this.mapH = this.map.length;
+  this.tileW = Math.ceil(this.canvasWidth / this.mapW);
+  this.tileH = Math.ceil(this.canvasHeight / this.mapH);
 
 	//  Scrolling background
 	this.tileMap = new TileMap({
+    map: this.map,
 		tileImage: opts.tileImage,
 		viewportWidth: this.canvasWidth,
-		viewportHeight: this.canvasHeight
+    viewportHeight: this.canvasHeight,
+    mapW: this.mapW,
+    mapH: this.mapH,
+    tileW: this.tileW,
+    tileH: this.tileH,
 	});
 
 	//  Holds keystates
@@ -56,7 +74,7 @@ Game.prototype.render = function()
 	var s = Game.DRAW_SCALE;
 
 	//  Render ground (covers screen so no need to clear)
-	this.tileMap.render(this.ctx, -0, 0);
+	this.tileMap.render(this.ctx);
 
 	//  Render the car.
 	//  Set axis at centre of screen and y axis up.
@@ -64,7 +82,20 @@ Game.prototype.render = function()
   this.ctx.scale(s, -s);
   // Don't move the camera
 	// this.ctx.translate( -this.car.position.x, -this.car.position.y );
-	this.car.render(this.ctx);
+  this.car.render(this.ctx);
+
+  // Compute the tile the car is currently on
+  var carX = this.car.position.x * s;
+  var carY = this.car.position.y * s;
+  var tileX = Math.floor(this.mapW / 2 + carX / this.tileW);
+  var tileY = Math.floor(this.mapH / 2 + carY / this.tileH);
+  if (tileX >= this.mapW) tileX = this.mapW - 1;
+  else if (tileX < 0) tileX = 0;
+  if (tileY >= this.mapH) tileY = this.mapH - 1;
+  else if (tileY < 0) tileY = 0;
+  var tile = this.map[tileY][tileX];
+  
+  if (tile == 0) console.log('COLLISION');
 
 	this.ctx.restore();
 

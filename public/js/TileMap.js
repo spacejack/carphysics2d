@@ -6,34 +6,15 @@ function TileMap(opts) {
   this.img = opts.tileImage;
   this.viewportWidth = opts.viewportWidth;
   this.viewportHeight = opts.viewportHeight;
-  this.map = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0, 0, 0, 1, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
-    [0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-  this.tileW = 200;
-  this.tileH = 200;
-  this.mapW = this.map[0].length;
-  this.mapH = this.map.length;
+  this.map = opts.map;
+  this.mapW = opts.mapW;
+  this.mapH = opts.mapH;
+  this.tileW = opts.tileW;
+  this.tileH = opts.tileH;
 }
 
-TileMap.prototype.render = function(ctx, xCam, yCam) {
-  var iw = this.tileW;
-  var ih = this.tileH;
-  var xStart = xCam;
-  if (xStart > 0) xStart -= iw;
-  var yStart = yCam;
-  if (yStart > 0) yStart -= ih;
-  var xCount = Math.ceil(this.viewportWidth / iw) + 1;
-  var yCount = Math.ceil(this.viewportHeight / ih) + 1;
-  console.log(xCount, yCount);
+TileMap.prototype.render = function(ctx) {
+  
 
   for (var y = 0; y < this.mapH; ++y) {
     for (var x = 0; x < this.mapW; ++x) {
