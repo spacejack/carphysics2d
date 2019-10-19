@@ -5,7 +5,6 @@
  */
 
 /**  Shorthand for document.getElementById */
-function $e( id )
-{
-	return document.getElementById(id);
+function $e(id) {
+  return document.getElementById(id);
 }

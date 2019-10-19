@@ -14,8 +14,6 @@ function TileMap(opts) {
 }
 
 TileMap.prototype.render = function(ctx) {
-  
-
   for (var y = 0; y < this.mapH; ++y) {
     for (var x = 0; x < this.mapW; ++x) {
       var xpos = x * this.tileW;
@@ -37,11 +35,11 @@ TileMap.prototype.render = function(ctx) {
       // Add the start and end texts
       if (this.map[y][x] == 2) {
         ctx.fillStyle = "#000000";
-        ctx.fillText("START", xpos+this.tileW/10, ypos+this.tileH/5);
+        ctx.fillText("START", xpos + this.tileW / 10, ypos + this.tileH / 5);
       }
       if (this.map[y][x] == 3) {
         ctx.fillStyle = "#fff";
-        ctx.fillText("END", xpos+this.tileW/10, ypos+this.tileH/5);
+        ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
       }
     }
   }
