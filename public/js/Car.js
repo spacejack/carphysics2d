@@ -55,6 +55,7 @@ var Car = function(opts) {
 
   //  Setup car configuration
   this.config = new Car.Config(opts.config);
+  this.goingForward = true;
   this.setConfig();
 
   // Setup route tracking
@@ -85,8 +86,6 @@ Car.Config = function(opts) {
       ? GMath.clamp(opts.lockGrip, 0.01, 1.0)
       : 0.7; // % of grip available when wheel is locked
   this.engineForce = opts.engineForce || 3000.0;
-  this.brakeForce = opts.brakeForce || 8000.0;
-  this.eBrakeForce = opts.eBrakeForce || this.brakeForce / 2.5;
   this.weightTransfer =
     typeof opts.weightTransfer === "number" ? opts.weightTransfer : 0.2; // How much weight is transferred during acceleration/braking
   this.maxSteer = opts.maxSteer || 0.6; // Maximum steering angle in radians
@@ -175,15 +174,13 @@ Car.prototype.doPhysics = function(dt) {
     ) * axleWeightRear;
 
   //  Get amount of brake/throttle from our inputs
-  var brake = Math.min(
-    this.inputs.brake * cfg.brakeForce + this.inputs.ebrake * cfg.eBrakeForce,
-    cfg.brakeForce
-  );
-  var throttle = this.inputs.throttle * cfg.engineForce;
+  var throttle = (this.inputs.throttle - this.inputs.brake) * cfg.engineForce;
+
+  // console.log(this.velocity.len());
 
   //  Resulting force in local car coordinates.
   //  This is implemented as a RWD car only.
-  var tractionForce_cx = throttle - brake * GMath.sign(this.velocity_c.x);
+  var tractionForce_cx = throttle;
   var tractionForce_cy = 0;
 
   var dragForce_cx =
@@ -331,7 +328,8 @@ Car.prototype.render = function(ctx) {
     cfg.cgToFront + cfg.cgToRear,
     cfg.halfWidth * 2.0
   );
-  ctx.fillStyle = "#1166BB";
+  if (this.followingRoute) ctx.fillStyle = "#777";
+  else ctx.fillStyle = "#1166BB";
   ctx.fill();
   ctx.lineWidth = 0.05; // use thin lines because everything is scaled up 25x
   ctx.strokeStyle = "#222222";
