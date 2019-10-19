@@ -20,7 +20,7 @@ var Game = function( opts )
     [0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
     [0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 3, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   this.mapW = this.map[0].length;
@@ -60,6 +60,13 @@ var Game = function( opts )
 
 Game.DRAW_SCALE = 25.0;  // 1m = 25px
 
+Game.prototype.reachedEnd = function () {
+  this.ctx.fillStyle = "#000";
+  this.ctx.textAlign = "center";
+  this.ctx.scale(1, -1);
+  this.ctx.fillText("You win!", 0, 0);
+  this.ctx.restore();
+}
 
 /**  Update game logic by delta T (millisecs) */
 Game.prototype.update = function( dt )
@@ -91,7 +98,7 @@ Game.prototype.render = function()
   var carX = this.car.position.x * s;
   var carY = this.car.position.y * s;
   var tileX = Math.floor(this.mapW / 2 + carX / this.tileW);
-  var tileY = Math.floor(this.mapH / 2 + carY / this.tileH);
+  var tileY = this.mapH - Math.floor(this.mapH / 2 + carY / this.tileH) - 1;
   if (tileX >= this.mapW) tileX = this.mapW - 1;
   else if (tileX < 0) tileX = 0;
   if (tileY >= this.mapH) tileY = this.mapH - 1;
@@ -99,6 +106,8 @@ Game.prototype.render = function()
   var tile = this.map[tileY][tileX];
   
   if (tile == 0) console.log('COLLISION');
+  // End
+  if (tile == 3) this.reachedEnd();
 
 	this.ctx.restore();
 

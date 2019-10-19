@@ -25,16 +25,23 @@ TileMap.prototype.render = function(ctx) {
           ctx.fillStyle = "#685b48";
           break;
         case 2:
-          ctx.fillStyle = "#dddddd";
+          ctx.fillStyle = "#ddd";
+          break;
+        case 3:
+          ctx.fillStyle = "#222";
           break;
         default:
           ctx.fillStyle = "#5aa457";
       }
       ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
-      // Add the start text
+      // Add the start and end texts
       if (this.map[y][x] == 2) {
         ctx.fillStyle = "#000000";
         ctx.fillText("START", xpos+this.tileW/10, ypos+this.tileH/5);
+      }
+      if (this.map[y][x] == 3) {
+        ctx.fillStyle = "#fff";
+        ctx.fillText("END", xpos+this.tileW/10, ypos+this.tileH/5);
       }
     }
   }
