@@ -56,13 +56,14 @@ Game.prototype.render = function()
 	var s = Game.DRAW_SCALE;
 
 	//  Render ground (covers screen so no need to clear)
-	this.tileMap.render(this.ctx, -this.car.position.x * s, this.car.position.y * s);
+	this.tileMap.render(this.ctx, -0, 0);
 
 	//  Render the car.
 	//  Set axis at centre of screen and y axis up.
 	this.ctx.translate( this.canvasWidth / 2.0, this.canvasHeight / 2.0 );
-	this.ctx.scale(s, -s);
-	this.ctx.translate( -this.car.position.x, -this.car.position.y );
+  this.ctx.scale(s, -s);
+  // Don't move the camera
+	// this.ctx.translate( -this.car.position.x, -this.car.position.y );
 	this.car.render(this.ctx);
 
 	this.ctx.restore();
