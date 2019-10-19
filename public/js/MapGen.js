@@ -10,7 +10,9 @@ function createArray(num, dimensionx, dimensiony) {
 
 
   //lets create a randomly generated map for our dungeon crawler
-  function createMap(dimensionx, dimensiony, maxroads) {
+  function createMap(f_dimensionx, f_dimensiony, maxroads) {
+      dimensionx = f_dimensionx - 2 
+      dimensiony = f_dimensiony - 2
       let maxLength = Math.max(dimensionx,dimensiony), // max length each road can have
       map = createArray(0, dimensionx, dimensiony), // create a 2d array full of 1's
       currentRow = Math.floor(dimensionx/2), // our current row - start at a random spot
@@ -56,7 +58,7 @@ function createArray(num, dimensionx, dimensiony) {
       }
     }
     // wrap our map in newMap with dimensions increased by 2 
-    let newMap = createArray(0,dimensionx+2, dimensiony+2)
+    let newMap = createArray(0,f_dimensionx, f_dimensiony)
     for (var i = 0; i < dimensionx; i++) {                  
         for (var j = 0; j < dimensiony; j++) {           
             newMap[i+1][j+1]=map[i][j]; 
