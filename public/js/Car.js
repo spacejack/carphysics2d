@@ -331,7 +331,8 @@ Car.prototype.render = function(ctx) {
     cfg.cgToFront + cfg.cgToRear,
     cfg.halfWidth * 2.0
   );
-  ctx.fillStyle = "#1166BB";
+  if (this.followingRoute) ctx.fillStyle = "#777";
+  else ctx.fillStyle = "#1166BB";
   ctx.fill();
   ctx.lineWidth = 0.05; // use thin lines because everything is scaled up 25x
   ctx.strokeStyle = "#222222";
