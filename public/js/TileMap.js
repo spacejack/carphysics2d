@@ -19,29 +19,41 @@ TileMap.prototype.render = function(ctx) {
     for (var x = 0; x < this.mapW; ++x) {
       var xpos = x * this.tileW;
       var ypos = y * this.tileH;
-      switch (this.map[y][x]) {
-        case 0:
-          ctx.fillStyle = "#685b48";
-          break;
-        case 3:
-          ctx.fillStyle = "#222";
-          break;
-        default:
-          ctx.fillStyle = "#5aa457";
-      }
-      ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
+      var tile = this.map[y][x];
+
       // Add the start and end texts
       if (x == this.startX && y == this.startY) {
-        ctx.fillStyle = '#ddd';
+        ctx.fillStyle = "#ddd";
         ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
         ctx.fillStyle = "#000000";
         ctx.fillText("START", xpos + this.tileW / 10, ypos + this.tileH / 5);
-      }
-      else if (x == this.endX && y == this.endY) {
-        ctx.fillStyle = '#222';
+      } else if (x == this.endX && y == this.endY) {
+        ctx.fillStyle = "#222";
         ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
         ctx.fillStyle = "#fff";
         ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
+      } else if (tile == 0) {
+        var img = new Image();
+        // Top left
+        if (x == 0 && y == 0) img.src = "img/tile.jpg";
+        // Bottom left
+        else if (x == 0 && y == this.mapH - 1) img.src = "img/tile.jpg";
+        // Top right
+        else if (x == this.mapW - 1 && y == 0) img.src = "img/tile.jpg";
+        // Bottom right
+        else if (x == this.mapW - 1 && y == this.mapH - 1)
+          img.src = "img/tile.jpg";
+        // Top or bottom
+        else if (y == 0 || y == this.mapH - 1) img.src = "img/wall-y.png";
+        // Left or right
+        else if (x == 0 || x == this.mapW - 1) img.src = "img/wall-x.png";
+        // Normal wall
+        else img.src = "img/tile.jpg";
+
+        ctx.drawImage(img, xpos, ypos, this.tileW, this.tileH);
+      } else {
+        ctx.fillStyle = "#5aa457";
+        ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
       }
     }
   }

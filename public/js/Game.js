@@ -73,9 +73,23 @@ Game.prototype.getRandomStartPosition = function() {
 };
 
 Game.prototype.getRandomEndPosition = function() {
-  return this.possibleEndPositions[
-    Math.floor(Math.random() * this.possibleEndPositions.length)
-  ];
+  // Only generated start so far
+  var compareX, compareY;
+  if (this.endX === undefined) {
+    compareX = this.startX;
+    compareY = this.startY;
+  } else {
+    compareX = this.endX;
+    compareY = this.endY;
+  }
+  const MIN_DIST = 5.0;
+  const filteredEnds = this.possibleEndPositions.filter(
+    ([x, y]) =>
+      Math.sqrt(Math.pow(compareX - x, 2) + Math.pow(compareY - y, 2)) >
+      MIN_DIST
+  );
+
+  return filteredEnds[Math.floor(Math.random() * filteredEnds.length)];
 };
 
 Game.prototype.reset = function() {
