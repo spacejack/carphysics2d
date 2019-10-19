@@ -61,7 +61,7 @@ var Game = function(opts) {
   this.configPanel = new ConfigPanel(this.car);
 };
 
-Game.DRAW_SCALE = 25.0; // 1m = 25px
+Game.DRAW_SCALE = 15.0; // 1m = 25px
 
 Game.prototype.getRandomStartPosition = function() {
   return this.possibleStartPositions.pop();
@@ -166,7 +166,6 @@ Game.prototype.render = function() {
       Math.pow(Math.abs(x - this.car.position.x), 2) +
         Math.pow(Math.abs(y - this.car.position.y), 2)
     );
-    console.log(this.car.cgToFront);
     if (distFromCar < 1.5) {
       console.log("COLLISION");
       this.gameOver();
@@ -174,7 +173,6 @@ Game.prototype.render = function() {
   }
 
   // Detect collision with walls
-
   var tileX = Math.floor(this.mapW / 2 + carX / this.tileW);
   var tileY = this.mapH - Math.floor(this.mapH / 2 + carY / this.tileH) - 1;
   if (tileX >= this.mapW) tileX = this.mapW - 1;
@@ -192,19 +190,19 @@ Game.prototype.render = function() {
     var diffY = Math.min(Math.abs(diffY_bottom), Math.abs(diffY_top));
     if (diffX < diffY) {
       // Hit on x axis
-      this.car.velocity.x = -0.1 * this.car.velocity.x;
+      this.car.velocity.x = -0.5 * this.car.velocity.x;
       if (Math.abs(diffX_left) < Math.abs(diffX_right)) {
-        this.car.position.x += 0.1 * diffX_left;
+        this.car.position.x += -0.1;
       } else {
-        this.car.position.x += 0.1 * diffX_right;
+        this.car.position.x += 0.1;
       }
     } else {
       // Hit on y axis
-      this.car.velocity.y = -0.1 * this.car.velocity.y;
+      this.car.velocity.y = -0.5 * this.car.velocity.y;
       if (Math.abs(diffY_bottom) < Math.abs(diffY_top)) {
-        this.car.position.y += 0.1 * diffY_bottom;
+        this.car.position.y += 0.1;
       } else {
-        this.car.position.y += 0.1 * diffY_top;
+        this.car.position.y += -0.1;
       }
     }
   }
