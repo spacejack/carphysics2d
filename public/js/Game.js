@@ -16,8 +16,8 @@ var Game = function(opts) {
   this.mapW = 16;
   this.mapH = 10;
   this.map = createMap(
-    this.mapH - 2,
-    this.mapW - 2,
+    this.mapH,
+    this.mapW,
     Math.ceil(Math.max(this.mapW, this.mapH) * 2.0)
   );
 
