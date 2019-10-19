@@ -15,17 +15,26 @@ var Game = function(opts) {
   this.canvasHeight = this.canvas.clientHeight;
   this.map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 2, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
     [0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
     [0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
   this.mapW = this.map[0].length;
   this.mapH = this.map.length;
   this.tileW = Math.ceil(this.canvasWidth / this.mapW);
   this.tileH = Math.ceil(this.canvasHeight / this.mapH);
+
+  this.possibleStartPositions = this.map
+    .map((row, ridx) =>
+      row.map((col, cidx) => (col == 1 ? [cidx, ridx] : null))
+    )
+    .flat()
+    .filter(x => x !== null)
+    .sort(() => Math.random() - 0.5);
+  this.possibleEndPositions = [...this.possibleStartPositions];
 
   //  Scrolling background
   this.tileMap = new TileMap({
@@ -37,6 +46,7 @@ var Game = function(opts) {
     mapH: this.mapH,
     tileW: this.tileW,
     tileH: this.tileH,
+    startPosition: [0, 0],
   });
 
   //  Holds keystates
@@ -61,14 +71,36 @@ var Game = function(opts) {
 
 Game.DRAW_SCALE = 25.0; // 1m = 25px
 
+Game.prototype.getRandomStartPosition = function() {
+  return this.possibleStartPositions.pop();
+};
+
+Game.prototype.getRandomEndPosition = function() {
+  return this.possibleEndPositions[
+    Math.floor(Math.random() * this.possibleEndPositions.length)
+  ];
+};
+
 Game.prototype.reset = function() {
-  // == this.map[1][1]
-  this.car.position.x =
-    (-this.canvasWidth / 2 + this.tileW + this.tileW / 2) / Game.DRAW_SCALE;
-  this.car.position.y =
-    (-this.canvasHeight / 2 + (this.mapH - 2) * this.tileH + this.tileH / 2) /
-    Game.DRAW_SCALE;
-  this.car.heading = 0.0;
+  if (this.possibleStartPositions.length > 0) {
+    [this.startX, this.startY] = this.getRandomStartPosition();
+    [this.endX, this.endY] = this.getRandomEndPosition();
+    this.tileMap.startX = this.startX;
+    this.tileMap.startY = this.startY;
+    this.tileMap.endX = this.endX;
+    this.tileMap.endY = this.endY;
+    this.car.position.x =
+      (-this.canvasWidth / 2 + this.startX * this.tileW + this.tileW / 2) /
+      Game.DRAW_SCALE;
+    this.car.position.y =
+      (-this.canvasHeight / 2 +
+        (this.mapH - this.startY - 1) * this.tileH +
+        this.tileH / 2) /
+      Game.DRAW_SCALE;
+    this.car.heading = 0.0;
+  } else {
+    this.gameOver();
+  }
   this.car.velocity.x = 0.0;
   this.car.velocity.y = 0.0;
   this.car.route = [];
@@ -76,19 +108,23 @@ Game.prototype.reset = function() {
 };
 
 Game.prototype.reachedEnd = function() {
-  this.ctx.save();
-  this.ctx.fillStyle = "#000";
-  this.ctx.textAlign = "center";
-  this.ctx.scale(1, -1);
-  this.ctx.fillText("You win!", 0, 0);
-  this.ctx.restore();
-
   var c = new Car({});
   c.route = [...this.car.route];
   c.followingRoute = true;
   this.car.route = [];
   this.ghostCars.push(c);
   this.reset();
+};
+
+Game.prototype.gameOver = function() {
+  this.ctx.save();
+  this.ctx.fillStyle = "#000";
+  this.ctx.textAlign = "center";
+  this.ctx.scale(1, -1);
+  this.ctx.strokeStyle = "#fff";
+  this.ctx.strokeText("GAME OVER", 0, 0);
+  this.ctx.fillText("GAME OVER", 0, 0);
+  this.ctx.restore();
 };
 
 /**  Update game logic by delta T (millisecs) */
@@ -139,7 +175,7 @@ Game.prototype.render = function() {
 
   if (tile == 0) console.log("COLLISION");
   // End
-  if (tile == 3) this.reachedEnd();
+  if (tileX == this.endX && tileY == this.endY) this.reachedEnd();
 
   this.ctx.restore();
 
