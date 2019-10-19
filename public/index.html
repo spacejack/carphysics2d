@@ -20,42 +20,20 @@
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/MapGen.js"></script>
 </head>
-
-<!--
-	This is a HTML/Javascript adaptation of Marco Monster's 2D car physics demo.
-	Physics Paper here:
-	http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
-	Windows demo written in C here:
-	http://www.gamedev.net/topic/394292-demosource-of-marco-monsters-car-physics-tutorial/
-	Additional ideas from here:
-	https://github.com/Siorki/js13kgames/tree/master/2013%20-%20staccato
-
-	Adapted by Mike Linkovich
-	http://www.spacejack.ca/projects/carphysics2d/
-	https://github.com/spacejack/carphysics2d
-
-	License: MIT
-	http://opensource.org/licenses/MIT
--->
-
 <body>
 
 <div id="game_container" class="game_container">
 
 	<div id="game" class="webgame">
-		<div id="sidebar">
-			<div class="toggle-btn" onclick="toggleSidebar()"><a>
-			 <span></span>
-			 <span></span>
-			 <span></span>
-			</a>
-			</div>
-			<ul>
-			 <li>Explore</li>
-			 <li>Sell</li>
-			 <li>Buy</li>
-			</ul>
-		   </div>
+		<!-- Menu elements-->
+<div id="menu" class="menu">
+    <p><a>Home</a></p>
+    <p><a>Settings</a></p>
+    <p><a>Credits</a></p>
+</div>
+<div class="menu__toggler" onclick="toggleSidebar()"><span></span></div>
+
+
 		<canvas id="game_canvas" class="game_canvas"></canvas>
 
 
