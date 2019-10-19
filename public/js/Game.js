@@ -117,6 +117,10 @@ Game.prototype.reachedEnd = function() {
 };
 
 Game.prototype.gameOver = function() {
+  this.ghostCars = [];
+  this.car.velocity.x = 0;
+  this.car.velocity.y = 0;
+
   this.ctx.save();
   this.ctx.fillStyle = "#000";
   this.ctx.textAlign = "center";
@@ -151,6 +155,10 @@ Game.prototype.render = function() {
   this.ctx.scale(s, -s);
   this.car.render(this.ctx);
 
+  // Initialize variables for collision detection
+  var carX = this.car.position.x * s;
+  var carY = this.car.position.y * s;
+
   // Render other cars
   for (var ghostCar of this.ghostCars) {
     var [x, y, heading] = ghostCar.route[
@@ -160,11 +168,21 @@ Game.prototype.render = function() {
     ghostCar.position.y = y;
     ghostCar.heading = heading;
     ghostCar.render(this.ctx);
+
+    // Collision detection for ghost cars
+    var distFromCar = Math.sqrt(
+      Math.pow(Math.abs(x - this.car.position.x), 2) +
+        Math.pow(Math.abs(y - this.car.position.y), 2)
+    );
+    console.log(this.car.cgToFront);
+    if (distFromCar < 2.0) {
+      console.log("COLLISION");
+      this.gameOver();
+    }
   }
 
-  // Compute the tile the car is currently on
-  var carX = this.car.position.x * s;
-  var carY = this.car.position.y * s;
+  // Detect collision with walls
+
   var tileX = Math.floor(this.mapW / 2 + carX / this.tileW);
   var tileY = this.mapH - Math.floor(this.mapH / 2 + carY / this.tileH) - 1;
   if (tileX >= this.mapW) tileX = this.mapW - 1;
@@ -198,6 +216,7 @@ Game.prototype.render = function() {
       }
     }
   }
+
   // End
   if (tileX == this.endX && tileY == this.endY) this.reachedEnd();
 
