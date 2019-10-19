@@ -173,7 +173,31 @@ Game.prototype.render = function() {
   else if (tileY < 0) tileY = 0;
   var tile = this.map[tileY][tileX];
 
-  if (tile == 0) console.log("COLLISION");
+  if (tile == 0) {
+    var diffX_left = tileX * this.tileW - this.canvasWidth / 2 - carX;
+    var diffX_right = (tileX + 1) * this.tileW - this.canvasWidth / 2 - carX;
+    var diffX = Math.min(Math.abs(diffX_left), Math.abs(diffX_right));
+    var diffY_bottom = this.canvasHeight / 2 - tileY * this.tileH - carY;
+    var diffY_top = this.canvasHeight / 2 - (tileY + 1) * this.tileH - carY;
+    var diffY = Math.min(Math.abs(diffY_bottom), Math.abs(diffY_top));
+    if (diffX < diffY) {
+      // Hit on x axis
+      this.car.velocity.x = -0.1 * this.car.velocity.x;
+      if (Math.abs(diffX_left) < Math.abs(diffX_right)) {
+        this.car.position.x += 0.1 * diffX_left;
+      } else {
+        this.car.position.x += 0.1 * diffX_right;
+      }
+    } else {
+      // Hit on y axis
+      this.car.velocity.y = -0.1 * this.car.velocity.y;
+      if (Math.abs(diffY_bottom) < Math.abs(diffY_top)) {
+        this.car.position.y += 0.1 * diffY_bottom;
+      } else {
+        this.car.position.y += 0.1 * diffY_top;
+      }
+    }
+  }
   // End
   if (tileX == this.endX && tileY == this.endY) this.reachedEnd();
 
