@@ -56,6 +56,9 @@ var Car = function(opts) {
   //  Setup car configuration
   this.config = new Car.Config(opts.config);
   this.setConfig();
+
+  // Setup route tracking
+  this.route = [];
 };
 
 /**
@@ -309,6 +312,9 @@ Car.prototype.update = function(dtms) {
  */
 Car.prototype.render = function(ctx) {
   var cfg = this.config; // shorthand reference
+
+  // Store current position and heading to route
+  this.route.push([this.position.x, this.position.y, this.heading]);
 
   ctx.save();
 

@@ -48,14 +48,12 @@ var Game = function(opts) {
   //  Instance of our car
   this.car = new Car({
     stats: this.stats,
-    // this.map[1][1]
-    // x: (-this.canvasWidth / 2 + this.tileW + this.tileW / 2) / Game.DRAW_SCALE,
-    // y:
-    //   (-this.canvasHeight / 2 + (this.mapH - 2) * this.tileH + this.tileH / 2) /
-    //   Game.DRAW_SCALE,
   });
-
   this.reset();
+
+  // Ghost cars
+  this.ghostCars = [];
+  this.counter = 0;
 
   //  Configuration panel for the car
   this.configPanel = new ConfigPanel(this.car);
@@ -64,6 +62,7 @@ var Game = function(opts) {
 Game.DRAW_SCALE = 25.0; // 1m = 25px
 
 Game.prototype.reset = function() {
+  // == this.map[1][1]
   this.car.position.x =
     (-this.canvasWidth / 2 + this.tileW + this.tileW / 2) / Game.DRAW_SCALE;
   this.car.position.y =
@@ -72,6 +71,8 @@ Game.prototype.reset = function() {
   this.car.heading = 0.0;
   this.car.velocity.x = 0.0;
   this.car.velocity.y = 0.0;
+  this.car.route = [];
+  this.counter = 0;
 };
 
 Game.prototype.reachedEnd = function() {
@@ -81,8 +82,9 @@ Game.prototype.reachedEnd = function() {
   this.ctx.fillText("You win!", 0, 0);
   this.ctx.restore();
 
-  // this.car.velocity.x = 0.0;
-  // this.car.velocity.y = 0.0;
+  var c = new Car({});
+  c.route = this.car.route;
+  this.ghostCars.push(c);
   this.reset();
 };
 
@@ -110,6 +112,18 @@ Game.prototype.render = function() {
   this.ctx.scale(s, -s);
   this.car.render(this.ctx);
 
+  // Render other cars
+  for (var ghostCar of this.ghostCars) {
+    console.log(this.counter);
+    var [x, y, heading] = ghostCar.route[
+      Math.min(this.counter, ghostCar.route.length - 1)
+    ];
+    ghostCar.position.x = x;
+    ghostCar.position.y = y;
+    ghostCar.heading = heading;
+    ghostCar.render(this.ctx);
+  }
+
   // Compute the tile the car is currently on
   var carX = this.car.position.x * s;
   var carY = this.car.position.y * s;
@@ -129,6 +143,9 @@ Game.prototype.render = function() {
 
   //  Stats rendered to DOM
   this.stats.render();
+
+  // Increase the ghost car counter
+  this.counter++;
 };
 
 Game.prototype.resize = function() {
