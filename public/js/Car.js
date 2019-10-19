@@ -22,7 +22,7 @@
  */
 var Car = function( opts )
 {
-	opts = opts || {};
+  opts = opts || {};
 
 	//  Car state variables
   this.heading = opts.heading || 0.0;  // angle car is pointed at (radians)
@@ -40,7 +40,7 @@ var Car = function( opts )
 	this.inputs = new InputState();
 
 	//  Use input smoothing (on by default)
-	this.smoothSteer = (opts.smoothSteer === undefined) ? true : !!opts.smoothSteer;
+	this.smoothSteer = (opts.smoothSteer === undefined) ? false : !!opts.smoothSteer;
 	//  Use safe steering (angle limited by speed)
 	this.safeSteer = (opts.safeSteer === undefined) ? true : !!opts.safeSteer;
 
@@ -78,8 +78,8 @@ Car.Config = function( opts )
 	this.wheelWidth = opts.wheelWidth || 0.2;  // Used for render only
 	this.tireGrip = opts.tireGrip || 2.0;  // How much grip tires have
 	this.lockGrip = (typeof opts.lockGrip === 'number') ? GMath.clamp(opts.lockGrip, 0.01, 1.0) : 0.7;  // % of grip available when wheel is locked
-	this.engineForce = opts.engineForce || 4000.0;
-	this.brakeForce = opts.brakeForce || 6000.0;
+	this.engineForce = opts.engineForce || 3000.0;
+	this.brakeForce = opts.brakeForce || 8000.0;
 	this.eBrakeForce = opts.eBrakeForce || this.brakeForce / 2.5;
 	this.weightTransfer = (typeof opts.weightTransfer === 'number') ? opts.weightTransfer : 0.2;  // How much weight is transferred during acceleration/braking
 	this.maxSteer = opts.maxSteer || 0.6;  // Maximum steering angle in radians
