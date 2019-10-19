@@ -13,9 +13,14 @@ var Game = function(opts) {
   this.ctx = this.canvas.getContext("2d");
   this.canvasWidth = this.canvas.clientWidth;
   this.canvasHeight = this.canvas.clientHeight;
-  this.map = createMap(14, 20, 30);
-  this.mapW = this.map[0].length;
-  this.mapH = this.map.length;
+  this.mapW = 16;
+  this.mapH = 10;
+  this.map = createMap(
+    this.mapH - 2,
+    this.mapW - 2,
+    Math.ceil(Math.max(this.mapW, this.mapH) * 2.0)
+  );
+
   this.tileW = Math.ceil(this.canvasWidth / this.mapW);
   this.tileH = Math.ceil(this.canvasHeight / this.mapH);
 
@@ -61,7 +66,7 @@ var Game = function(opts) {
   this.configPanel = new ConfigPanel(this.car);
 };
 
-Game.DRAW_SCALE = 15.0; // 1m = 25px
+Game.DRAW_SCALE = 20.0; // 1m = 25px
 
 Game.prototype.getRandomStartPosition = function() {
   return this.possibleStartPositions.pop();
@@ -86,7 +91,7 @@ Game.prototype.reset = function() {
       Game.DRAW_SCALE;
     this.car.position.y =
       (-this.canvasHeight / 2 +
-        (this.mapH - this.startY - 1) * this.tileH +
+        (this.mapH - this.startY) * this.tileH -
         this.tileH / 2) /
       Game.DRAW_SCALE;
     this.car.heading = 0.0;
