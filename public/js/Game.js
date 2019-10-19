@@ -76,6 +76,7 @@ Game.prototype.reset = function() {
 };
 
 Game.prototype.reachedEnd = function() {
+  this.ctx.save();
   this.ctx.fillStyle = "#000";
   this.ctx.textAlign = "center";
   this.ctx.scale(1, -1);
@@ -83,7 +84,9 @@ Game.prototype.reachedEnd = function() {
   this.ctx.restore();
 
   var c = new Car({});
-  c.route = this.car.route;
+  c.route = [...this.car.route];
+  c.followingRoute = true;
+  this.car.route = [];
   this.ghostCars.push(c);
   this.reset();
 };
@@ -114,7 +117,6 @@ Game.prototype.render = function() {
 
   // Render other cars
   for (var ghostCar of this.ghostCars) {
-    console.log(this.counter);
     var [x, y, heading] = ghostCar.route[
       Math.min(this.counter, ghostCar.route.length - 1)
     ];

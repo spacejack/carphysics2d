@@ -59,6 +59,7 @@ var Car = function(opts) {
 
   // Setup route tracking
   this.route = [];
+  this.followingRoute = false;
 };
 
 /**
@@ -314,7 +315,8 @@ Car.prototype.render = function(ctx) {
   var cfg = this.config; // shorthand reference
 
   // Store current position and heading to route
-  this.route.push([this.position.x, this.position.y, this.heading]);
+  if (!this.followingRoute)
+    this.route.push([this.position.x, this.position.y, this.heading]);
 
   ctx.save();
 
