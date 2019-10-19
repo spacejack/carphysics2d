@@ -188,9 +188,10 @@ Game.prototype.render = function() {
     var diffY_bottom = this.canvasHeight / 2 - tileY * this.tileH - carY;
     var diffY_top = this.canvasHeight / 2 - (tileY + 1) * this.tileH - carY;
     var diffY = Math.min(Math.abs(diffY_bottom), Math.abs(diffY_top));
+    this.car.velocity.y = -0.3 * this.car.velocity.y;
+    this.car.velocity.x = -0.3 * this.car.velocity.x;
     if (diffX < diffY) {
       // Hit on x axis
-      this.car.velocity.x = -0.5 * this.car.velocity.x;
       if (Math.abs(diffX_left) < Math.abs(diffX_right)) {
         this.car.position.x += -0.1;
       } else {
@@ -198,7 +199,6 @@ Game.prototype.render = function() {
       }
     } else {
       // Hit on y axis
-      this.car.velocity.y = -0.5 * this.car.velocity.y;
       if (Math.abs(diffY_bottom) < Math.abs(diffY_top)) {
         this.car.position.y += 0.1;
       } else {
