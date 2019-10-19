@@ -10,17 +10,19 @@ function createArray(num, dimensionx, dimensiony) {
 
 
   //lets create a randomly generated map for our dungeon crawler
-  function createMap(dimensionx, dimensiony, maxroads) {
-      let maxLength = 10, // max length each road can have
+  function createMap(f_dimensionx, f_dimensiony, maxroads) {
+      dimensionx = f_dimensionx - 2 
+      dimensiony = f_dimensiony - 2
+      let maxLength = Math.max(dimensionx,dimensiony), // max length each road can have
       map = createArray(0, dimensionx, dimensiony), // create a 2d array full of 1's
-      currentRow = Math.floor(Math.random() * dimensionx), // our current row - start at a random spot
-      currentColumn = Math.floor(Math.random() * dimensiony), // our current column - start at a random spot
+      currentRow = Math.floor(dimensionx/2), // our current row - start at a random spot
+      currentColumn = Math.floor(dimensiony/2), // our current column - start at a random spot
       directions = [[-1, 0], [1, 0], [0, -1], [0, 1]], // array to get a random direction from (left,right,up,down)
       lastDirection = [], // save the last direction we went
       randomDirection; // next turn/direction - holds a value from directions
 
-    // lets create some roads - while maxroads, dimentions, and maxLength  is greater than 0.
-    while (maxroads) {
+    // lets create some roads - while maxroads, dimensions, and maxLength is greater than 0.
+    while (maxroads && dimensionx && dimensiony && maxLength) {
 
       // lets get a random direction - until it is a perpendicular to our lastDirection
       // if the last direction = left or right,
@@ -56,7 +58,7 @@ function createArray(num, dimensionx, dimensiony) {
       }
     }
     // wrap our map in newMap with dimensions increased by 2 
-    let newMap = createArray(0,dimensionx+2, dimensiony+2)
+    let newMap = createArray(0,f_dimensionx, f_dimensiony)
     for (var i = 0; i < dimensionx; i++) {                  
         for (var j = 0; j < dimensiony; j++) {           
             newMap[i+1][j+1]=map[i][j]; 
