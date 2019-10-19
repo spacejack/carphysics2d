@@ -11,7 +11,7 @@ function createArray(num, dimensionx, dimensiony) {
 
   //lets create a randomly generated map for our dungeon crawler
   function createMap(dimensionx, dimensiony, maxroads) {
-      let maxLength = 20, // max length each road can have
+      let maxLength = Math.max(dimensionx,dimensiony), // max length each road can have
       map = createArray(0, dimensionx, dimensiony), // create a 2d array full of 1's
       currentRow = Math.floor(dimensionx/2), // our current row - start at a random spot
       currentColumn = Math.floor(dimensiony/2), // our current column - start at a random spot
@@ -19,8 +19,8 @@ function createArray(num, dimensionx, dimensiony) {
       lastDirection = [], // save the last direction we went
       randomDirection; // next turn/direction - holds a value from directions
 
-    // lets create some roads - while maxroads, dimentions, and maxLength  is greater than 0.
-    while (maxroads) {
+    // lets create some roads - while maxroads, dimensions, and maxLength is greater than 0.
+    while (maxroads && dimensionx && dimensiony && maxLength) {
 
       // lets get a random direction - until it is a perpendicular to our lastDirection
       // if the last direction = left or right,
