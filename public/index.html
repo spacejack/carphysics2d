@@ -7,6 +7,7 @@
 	<title>spacejack.ca / 2D Car Physics</title>
 	<link type="text/css" rel="stylesheet" href="css/style.css" media="screen"/>
 	<script type="text/javascript" src="js/domutil.js"></script>
+	<script type="text/javascript" src="js/sidebar.js"></script>
 	<script type="text/javascript" src="js/GMath.js"></script>
 	<script type="text/javascript" src="js/Vec2.js"></script>
 	<script type="text/javascript" src="js/InputState.js"></script>
@@ -41,12 +42,21 @@
 <div id="game_container" class="game_container">
 
 	<div id="game" class="webgame">
-
+		<div id="sidebar">
+			<div class="toggle-btn" onclick="toggleSidebar()"><a>
+			 <span></span>
+			 <span></span>
+			 <span></span>
+			</a>
+			</div>
+			<ul>
+			 <li>Explore</li>
+			 <li>Sell</li>
+			 <li>Buy</li>
+			</ul>
+		   </div>
 		<canvas id="game_canvas" class="game_canvas"></canvas>
 
-		<div id="sitenav" class="sitenav">
-			<a href="http://www.spacejack.ca/">spacejack.ca</a> / <a href="../">projects</a> / 2D Car Physics
-		</div>
 
 		<div id="sourcenav" class="sitenav" style="left:auto;right:1em">
 			<a href="https://github.com/spacejack/carphysics2d">source</a>
@@ -54,10 +64,6 @@
 
 		<div id="loading_block" class="loading_block">
 			loading...
-		</div>
-
-		<div id="instruct_block" class="instruct_block">
-			drive: arrows&nbsp;&nbsp;&nbsp;&nbsp;e-brake: space
 		</div>
 
 		<div id="config_block" class="config_block">
