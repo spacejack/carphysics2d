@@ -38,7 +38,7 @@ App.prototype.init = function() {
   this.tileImage.onload = function() {
     that.onAssetsLoaded();
   };
-  this.tileImage.src = "img/tile.jpg";
+  this.tileImage.src = "../img/tile.jpg";
 };
 
 App.prototype.onAssetsLoaded = function() {

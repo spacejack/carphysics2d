@@ -1,0 +1,81 @@
+@font-face {
+    font-family: speed;
+    src: url(../fonts/speed+.ttf);
+}
+@font-face {
+    font-family: speed2;
+    src: url(../fonts/speed+2.ttf);
+}
+* {
+    margin: 0;
+}
+body {
+    background-color: red;
+    text-align: center;
+    background-image: url('../img/main-bg.jpg');
+
+}
+
+main {
+
+    padding: 50px;
+    height: 400px;
+    width: 30%;
+    margin-left: 100px;
+    margin-top: 100px;
+    text-align: center;
+    transform: rotate(-45deg);
+}
+
+main h1 {
+    font-family: 'speed';
+    font-size: 100px;
+    color: #c0c0c0;
+    -webkit-text-stroke-width: .5px;
+    -webkit-text-stroke-color: #9b9b9b;
+    margin-bottom: 20px;;
+}
+
+a.button2{
+    display:inline-block;
+    padding:0.5em 3em;
+    border:0.16em solid #FFFFFF;
+    margin:0 0.3em 0.3em 0;
+    box-sizing: border-box;
+    text-decoration:none;
+    text-transform:uppercase;
+    font-family:'Roboto',sans-serif;
+    font-weight:400;
+    color:#FFFFFF;
+    text-align:center;
+    transition: all 0.15s;
+    cursor: pointer;
+}
+a.button2:hover{
+    color:#DDDDDD;
+    border-color:#DDDDDD;
+}
+a.button2:active{
+    color:#BBBBBB;
+    border-color:#BBBBBB;
+}
+a.button2.active-mode {
+    color:#BBBBBB;
+    border-color:#BBBBBB;
+}
+@media all and (max-width:30em){
+    a.button2 {
+        display: block;
+        margin: 0.4em auto;
+    }
+}
+footer {
+    position: fixed;
+    padding: 20px 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+    color: white;
+    text-align: center;
+ }
