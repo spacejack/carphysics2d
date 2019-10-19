@@ -11,11 +11,10 @@ function TileMap(opts) {
   this.mapH = opts.mapH;
   this.tileW = opts.tileW;
   this.tileH = opts.tileH;
+  [this.startX, this.startY] = opts.startPosition;
 }
 
 TileMap.prototype.render = function(ctx) {
-  
-
   for (var y = 0; y < this.mapH; ++y) {
     for (var x = 0; x < this.mapW; ++x) {
       var xpos = x * this.tileW;
@@ -23,9 +22,6 @@ TileMap.prototype.render = function(ctx) {
       switch (this.map[y][x]) {
         case 0:
           ctx.fillStyle = "#685b48";
-          break;
-        case 2:
-          ctx.fillStyle = "#ddd";
           break;
         case 3:
           ctx.fillStyle = "#222";
@@ -35,13 +31,17 @@ TileMap.prototype.render = function(ctx) {
       }
       ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
       // Add the start and end texts
-      if (this.map[y][x] == 2) {
+      if (x == this.startX && y == this.startY) {
+        ctx.fillStyle = '#ddd';
+        ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
         ctx.fillStyle = "#000000";
-        ctx.fillText("START", xpos+this.tileW/10, ypos+this.tileH/5);
+        ctx.fillText("START", xpos + this.tileW / 10, ypos + this.tileH / 5);
       }
-      if (this.map[y][x] == 3) {
+      else if (x == this.endX && y == this.endY) {
+        ctx.fillStyle = '#222';
+        ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
         ctx.fillStyle = "#fff";
-        ctx.fillText("END", xpos+this.tileW/10, ypos+this.tileH/5);
+        ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
       }
     }
   }
