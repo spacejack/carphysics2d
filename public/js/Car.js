@@ -25,7 +25,7 @@ var Car = function( opts )
 	opts = opts || {};
 
 	//  Car state variables
-	this.heading = opts.heading || 0.0;  // angle car is pointed at (radians)
+  this.heading = opts.heading || 0.0;  // angle car is pointed at (radians)
 	this.position = new Vec2(opts.x, opts.y);  // metres in world coords
 	this.velocity = new Vec2();  // m/s in world coords
 	this.velocity_c = new Vec2();  // m/s in local car coords (x is forward y is sideways)

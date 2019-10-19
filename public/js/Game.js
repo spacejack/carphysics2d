@@ -16,7 +16,7 @@ var Game = function( opts )
   this.canvasHeight = this.canvas.clientHeight;
   this.map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 2, 1, 1, 1, 1, 1, 1, 1, 0],
     [0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
     [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
     [0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
@@ -47,7 +47,12 @@ var Game = function( opts )
 	this.stats = new Stats();
 
 	//  Instance of our car
-	this.car = new Car({stats:this.stats});
+	this.car = new Car({
+    stats:this.stats,
+    // this.map[1][1]
+    x: (-this.canvasWidth/2 + this.tileW + (this.tileW)/2) / Game.DRAW_SCALE, 
+    y: (-this.canvasHeight/2 + (this.mapH - 2)*this.tileH + (this.tileH)/2) / Game.DRAW_SCALE,
+  });
 
 	//  Configuration panel for the car
 	this.configPanel = new ConfigPanel(this.car);
@@ -80,8 +85,6 @@ Game.prototype.render = function()
 	//  Set axis at centre of screen and y axis up.
 	this.ctx.translate( this.canvasWidth / 2.0, this.canvasHeight / 2.0 );
   this.ctx.scale(s, -s);
-  // Don't move the camera
-	// this.ctx.translate( -this.car.position.x, -this.car.position.y );
   this.car.render(this.ctx);
 
   // Compute the tile the car is currently on
