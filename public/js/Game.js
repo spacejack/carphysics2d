@@ -13,15 +13,7 @@ var Game = function(opts) {
   this.ctx = this.canvas.getContext("2d");
   this.canvasWidth = this.canvas.clientWidth;
   this.canvasHeight = this.canvas.clientHeight;
-  this.map = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
+  this.map = createMap(14, 20, 30);
   this.mapW = this.map[0].length;
   this.mapH = this.map.length;
   this.tileW = Math.ceil(this.canvasWidth / this.mapW);
@@ -175,7 +167,7 @@ Game.prototype.render = function() {
         Math.pow(Math.abs(y - this.car.position.y), 2)
     );
     console.log(this.car.cgToFront);
-    if (distFromCar < 2.0) {
+    if (distFromCar < 1.5) {
       console.log("COLLISION");
       this.gameOver();
     }
