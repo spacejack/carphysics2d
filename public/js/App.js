@@ -47,7 +47,11 @@ App.prototype.onAssetsLoaded = function() {
   $e("loading_block").style.display = "none";
 
   //  Create game instance
-  this.game = new Game({ canvas: this.canvas, numRounds: 5, numPlayers: 2 });
+  this.game = new Game({
+    canvas: this.canvas,
+    numRounds: 5,
+    numPlayers: GAME_MODE,
+  });
   // Bind to window
   window.game = this.game;
 
@@ -97,9 +101,9 @@ App.prototype.doFrame = function() {
   // Keep the animation loop going
   var that = this;
   requestAnimationFrame(function() {
-    if(END) {
+    if (END) {
       return;
-    }else if (!PAUSE) {
+    } else if (!PAUSE) {
       that.doFrame();
     }
   });
