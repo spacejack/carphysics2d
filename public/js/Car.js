@@ -35,6 +35,8 @@ var Car = function(opts) {
   this.steer = 0.0; // amount of steering input (-1.0..1.0)
   this.steerAngle = 0.0; // actual front wheel steer angle (-maxSteer..maxSteer)
 
+  this.color = opts.color || "gray";
+
   //  State of inputs
   this.inputs = new InputState();
 
@@ -314,7 +316,7 @@ Car.prototype.render = function(ctx) {
     cfg.halfWidth * 2.0
   );
   if (this.followingRoute) ctx.fillStyle = "#777";
-  else ctx.fillStyle = "#1166BB";
+  else ctx.fillStyle = this.color; //"#1166BB";
   ctx.fill();
   ctx.lineWidth = 0.05; // use thin lines because everything is scaled up 25x
   ctx.strokeStyle = "#222222";

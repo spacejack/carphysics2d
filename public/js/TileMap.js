@@ -24,15 +24,8 @@ TileMap.prototype.render = function(ctx) {
       var ypos = y * this.tileH;
       var tile = this.map[y][x];
 
-      // Start position
-      if (x == this.startX && y == this.startY) {
-        ctx.fillStyle = "#ddd";
-        ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
-        ctx.fillStyle = "#000000";
-        ctx.fillText("START", xpos + this.tileW / 10, ypos + this.tileH / 5);
-      }
       // End positions: 1 or more players have their end position here
-      else if (currEnds.some(([endX, endY]) => x == endX && y == endY)) {
+      if (currEnds.some(([endX, endY]) => x == endX && y == endY)) {
         const numPlayersInEnd = currEnds
           .map(([endX, endY]) => (x == endX && y == endY ? 1 : 0))
           .reduce((a, b) => a + b, 0);

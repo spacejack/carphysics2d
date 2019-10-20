@@ -62,7 +62,7 @@ Game.prototype.setUpGame = function() {
   for (let i = 0; i < this.numPlayers; i++) {
     const p = new Player({
       id: i,
-      car: new Car({}),
+      car: new Car({ color: Game.PLAYER_COLORS[i] }),
       color: Game.PLAYER_COLORS[i],
       ghosts: [],
       ghostCounter: 0,
@@ -75,7 +75,7 @@ Game.prototype.setUpGame = function() {
     p.car.position.y =
       (-this.canvasHeight / 2 +
         (this.mapH - startY) * this.tileH -
-        (this.tileH / this.numPlayers) * (i + 1)) /
+        (this.tileH / (this.numPlayers + 1)) * (i + 1)) /
       Game.DRAW_SCALE;
     this.players.push(p);
   }
