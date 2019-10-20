@@ -1,4 +1,5 @@
 var SIDEBAR_OPEN = false;
+var LEFT_GAME = false;
 $(document).ready(function () {
     $('#gameOverModal').hide();
     $('#homePanelBtn, #goToHome').click(function () { 
@@ -13,10 +14,16 @@ $(document).ready(function () {
         $('#menu__toggler').hide();
         $('#playModal').css('display', 'block');
     });
-    $('#settingsMenuBtn, #settingsBtn').click(function () {
+    $('#settingsMenuBtn').click(function () { 
+        if (SIDEBAR_OPEN)
+            toggleSidebar()();
+        $('#settingsModal').css('display', 'block');
+        
+    });
+    $('#settingsBtn').click(function () {
         //toggle menu
         if (SIDEBAR_OPEN)
-            toggleSidebar();
+                toggleSidebarDontResume();
         $('#settingsModal').css('display', 'block');
     });
     $('#closeSettingsModal').click(function (e) { 

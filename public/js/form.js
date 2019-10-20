@@ -32,7 +32,6 @@ $(document).ready(function () {
         console.log('Player 0 is: ' + PLAYER_0_NAME);
         console.log('Player 1 is: ' + PLAYER_1_NAME);
         console.log('Music volume is: ' + MUSIC_VOLUME);
-        
-        
+        App.resume();
     });
 });
