@@ -44,9 +44,6 @@ var Car = function(opts) {
   //  Use safe steering (angle limited by speed)
   this.safeSteer = opts.safeSteer === undefined ? true : !!opts.safeSteer;
 
-  //  Stats object we can use to ouptut info
-  this.stats = opts.stats;
-
   //  Other static values to be computed from config
   this.inertia = 0.0; // will be = mass
   this.wheelBase = 0.0; // set from axle to CG lengths
@@ -231,18 +228,6 @@ Car.prototype.doPhysics = function(dt) {
   //  finally we can update position
   this.position.x += this.velocity.x * dt;
   this.position.y += this.velocity.y * dt;
-
-  //  Display some data
-  this.stats.clear(); // clear this every tick otherwise it'll fill up fast
-  this.stats.add("speed", (this.velocity_c.x * 3600) / 1000); // km/h
-  this.stats.add("accleration", this.accel_c.x);
-  this.stats.add("yawRate", this.yawRate);
-  this.stats.add("weightFront", axleWeightFront);
-  this.stats.add("weightRear", axleWeightRear);
-  this.stats.add("slipAngleFront", slipAngleFront);
-  this.stats.add("slipAngleRear", slipAngleRear);
-  this.stats.add("frictionFront", frictionForceFront_cy);
-  this.stats.add("frictionRear", frictionForceRear_cy);
 };
 
 /**

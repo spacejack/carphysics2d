@@ -3,7 +3,6 @@
 "use strict";
 
 function TileMap(opts) {
-  this.img = opts.tileImage;
   this.viewportWidth = opts.viewportWidth;
   this.viewportHeight = opts.viewportHeight;
   this.map = opts.map;
@@ -12,27 +11,45 @@ function TileMap(opts) {
   this.tileW = opts.tileW;
   this.tileH = opts.tileH;
   [this.startX, this.startY] = opts.startPosition;
+  this.endPositions = opts.endPositions;
+  this.players = opts.players;
 }
 
 TileMap.prototype.render = function(ctx) {
+  const currEnds = this.players.map(p => p.getEndPosition(this.endPositions));
+
   for (var y = 0; y < this.mapH; ++y) {
     for (var x = 0; x < this.mapW; ++x) {
       var xpos = x * this.tileW;
       var ypos = y * this.tileH;
       var tile = this.map[y][x];
 
-      // Add the start and end texts
+      // Start position
       if (x == this.startX && y == this.startY) {
         ctx.fillStyle = "#ddd";
         ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
         ctx.fillStyle = "#000000";
         ctx.fillText("START", xpos + this.tileW / 10, ypos + this.tileH / 5);
-      } else if (x == this.endX && y == this.endY) {
-        ctx.fillStyle = "#222";
-        ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
-        ctx.fillStyle = "#fff";
-        ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
-      } else if (tile == 0) {
+      }
+      // End positions: 1 or more players have their end position here
+      else if (currEnds.some(([endX, endY]) => x == endX && y == endY)) {
+        const numPlayersInEnd = currEnds
+          .map(([endX, endY]) => (x == endX && y == endY ? 1 : 0))
+          .reduce((a, b) => a + b, 0);
+        if (numPlayersInEnd == 1) {
+          ctx.fillStyle = "#222";
+          ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
+          ctx.fillStyle = "#fff";
+          ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
+        } else if (numPlayersInEnd == 2) {
+          ctx.fillStyle = "red";
+          ctx.fillRect(xpos, ypos, this.tileW / 2, this.tileH);
+          ctx.fillStyle = "blue";
+          ctx.fillRect(xpos + this.tileW / 2, ypos, this.tileW / 2, this.tileH);
+        }
+      }
+      // Walls
+      else if (tile == 0) {
         var img = new Image();
         // Top left
         if (x == 0 && y == 0) img.src = "img/tile.jpg";
@@ -49,7 +66,6 @@ TileMap.prototype.render = function(ctx) {
         else if (x == 0 || x == this.mapW - 1) img.src = "img/wall-x.png";
         // Normal wall
         else img.src = "img/tile.jpg";
-
         ctx.drawImage(img, xpos, ypos, this.tileW, this.tileH);
       } else {
         ctx.fillStyle = "#5aa457";
@@ -57,20 +73,6 @@ TileMap.prototype.render = function(ctx) {
       }
     }
   }
-
-  // var ix, iy, x, y;
-  // for (iy = 0; iy < yCount; ++iy) {
-  //   for (ix = 0; ix < xCount; ++ix) {
-  //     x = xStart + ix * iw;
-  //     y = yStart + iy * ih;
-  //     -- ctx.translate(x, y);
-  //     if (ix % 2 == 0) ctx.fillStyle = "#5aa457";
-  //     else ctx.fillStyle = "#685b48";
-  //     ctx.fillRect(x, y, iw, ih);
-  //     -- console.log(x, y);
-  //     -- ctx.drawImage(this.img, x, y);
-  //   }
-  // }
 };
 
 TileMap.prototype.resize = function(w, h) {
