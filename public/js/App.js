@@ -20,7 +20,6 @@ App.run = function() {
   if (App._instance && !RESTART) return;
   App._instance = new App();
   App._instance.init();
-  console.log(App._instance && !RESTART);
 };
 
 App.prototype.init = function() {
@@ -102,7 +101,9 @@ App.prototype.doFrame = function() {
     }
   });
 };
-
+App.resume = function() {
+  App._instance.doFrame();
+}
 App.prototype.resize = function() {
   // What is our container size...
   var rc = $e("game_container").getBoundingClientRect();

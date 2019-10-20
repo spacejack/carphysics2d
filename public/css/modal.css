@@ -3,7 +3,7 @@
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 50px; /* Location of the box */
   left: 0;
   top: 0;
   margin: auto;
@@ -103,4 +103,7 @@
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+.game-over-modal h3 {
+  margin-bottom: 30px;
 }
