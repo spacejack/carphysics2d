@@ -39,8 +39,8 @@ TileMap.prototype.render = function(ctx) {
               JSON.stringify([x, y])
           ).color;
           ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
-          ctx.fillStyle = "#fff";
-          ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
+          // ctx.fillStyle = "#fff";
+          // ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
         } else if (numPlayersInEnd == 2) {
           ctx.fillStyle = this.players[0].color;
           ctx.fillRect(xpos, ypos, this.tileW / 2, this.tileH);

@@ -23,9 +23,12 @@ var Game = function(opts) {
   this.setUpGame();
 };
 
-Game.DRAW_SCALE = 20.0; // 1m = 25px
+Game.DRAW_SCALE = 25.0; // 1m = 25px
 Game.MIN_STARTEND_DELTA = 5.0;
-Game.PLAYER_COLORS = ["red", "blue", "yellow"];
+Game.PLAYER_COLORS = ["rgb(228,93,51)", "rgb(102,172,91)", "rgb(244,163,58)"];
+Game.PLAYER_CAR_SPRITES = ["dorange", "green", "orange"].map(
+  c => `img/car-${c}.png`
+);
 
 Game.prototype.getNextEndPosition = function([compareX, compareY]) {
   const ends = this.getRoadPositions(this.map).filter(
@@ -62,7 +65,7 @@ Game.prototype.setUpGame = function() {
   for (let i = 0; i < this.numPlayers; i++) {
     const p = new Player({
       id: i,
-      car: new Car({ color: Game.PLAYER_COLORS[i] }),
+      car: new Car({ imgSrc: Game.PLAYER_CAR_SPRITES[i] }),
       color: Game.PLAYER_COLORS[i],
       ghosts: [],
       ghostCounter: 0,

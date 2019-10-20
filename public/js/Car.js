@@ -35,7 +35,7 @@ var Car = function(opts) {
   this.steer = 0.0; // amount of steering input (-1.0..1.0)
   this.steerAngle = 0.0; // actual front wheel steer angle (-maxSteer..maxSteer)
 
-  this.color = opts.color || "gray";
+  this.imgSrc = opts.imgSrc || "img/car-black.png";
 
   //  State of inputs
   this.inputs = new InputState();
@@ -308,20 +308,16 @@ Car.prototype.render = function(ctx) {
   ctx.rotate(this.heading);
 
   // Draw car body
-  ctx.beginPath();
-  ctx.rect(
+  var img = new Image();
+  if (this.followingRoute) img.src = "img/car-black.png";
+  else img.src = this.imgSrc;
+  ctx.drawImage(
+    img,
     -cfg.cgToRear,
-    -cfg.halfWidth,
+    -2 * cfg.halfWidth,
     cfg.cgToFront + cfg.cgToRear,
-    cfg.halfWidth * 2.0
+    cfg.halfWidth * 4.0
   );
-  if (this.followingRoute) ctx.fillStyle = "#777";
-  else ctx.fillStyle = this.color; //"#1166BB";
-  ctx.fill();
-  ctx.lineWidth = 0.05; // use thin lines because everything is scaled up 25x
-  ctx.strokeStyle = "#222222";
-  ctx.stroke();
-  ctx.closePath();
 
   // Draw rear wheel
   ctx.translate(-cfg.cgToRearAxle, 0);
