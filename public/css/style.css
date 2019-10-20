@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=K2D");
+
 html,
 body {
   height: 100%;
@@ -124,7 +126,6 @@ td.value {
   text-align: right;
   min-width: 7em;
 }
-@import url("https://fonts.googleapis.com/css?family=K2D");
 .menu__toggler {
   position: absolute;
   top: 20px;
