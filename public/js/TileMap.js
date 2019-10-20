@@ -37,14 +37,18 @@ TileMap.prototype.render = function(ctx) {
           .map(([endX, endY]) => (x == endX && y == endY ? 1 : 0))
           .reduce((a, b) => a + b, 0);
         if (numPlayersInEnd == 1) {
-          ctx.fillStyle = "#222";
+          ctx.fillStyle = this.players.find(
+            p =>
+              JSON.stringify(p.getEndPosition(this.endPositions)) ==
+              JSON.stringify([x, y])
+          ).color;
           ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
           ctx.fillStyle = "#fff";
           ctx.fillText("END", xpos + this.tileW / 10, ypos + this.tileH / 5);
         } else if (numPlayersInEnd == 2) {
-          ctx.fillStyle = "red";
+          ctx.fillStyle = this.players[0].color;
           ctx.fillRect(xpos, ypos, this.tileW / 2, this.tileH);
-          ctx.fillStyle = "blue";
+          ctx.fillStyle = this.players[1].color;
           ctx.fillRect(xpos + this.tileW / 2, ypos, this.tileW / 2, this.tileH);
         }
       }

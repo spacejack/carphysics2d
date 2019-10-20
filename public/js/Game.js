@@ -25,6 +25,7 @@ var Game = function(opts) {
 
 Game.DRAW_SCALE = 20.0; // 1m = 25px
 Game.MIN_STARTEND_DELTA = 5.0;
+Game.PLAYER_COLORS = ["red", "blue", "yellow"];
 
 Game.prototype.getNextEndPosition = function([compareX, compareY]) {
   const ends = this.getRoadPositions(this.map).filter(
@@ -62,6 +63,7 @@ Game.prototype.setUpGame = function() {
     const p = new Player({
       id: i,
       car: new Car({}),
+      color: Game.PLAYER_COLORS[i],
       ghosts: [],
       ghostCounter: 0,
       round: 0,

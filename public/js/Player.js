@@ -1,6 +1,7 @@
 var Player = function(opts) {
   this.id = opts.id;
   this.car = opts.car;
+  this.color = opts.color;
   this.ghosts = opts.ghosts;
   this.ghostCounter = opts.ghostCounter;
   this.round = opts.round;
