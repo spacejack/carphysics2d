@@ -15,8 +15,11 @@ function TileMap(opts) {
   this.players = opts.players;
 }
 
+TileMap.HOUSE_TILES = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `img/house-${n}.png`);
+
 TileMap.prototype.render = function(ctx) {
   const currEnds = this.players.map(p => p.getEndPosition(this.endPositions));
+  const rng = new Random(696969);
 
   for (var y = 0; y < this.mapH; ++y) {
     for (var x = 0; x < this.mapW; ++x) {
@@ -66,11 +69,12 @@ TileMap.prototype.render = function(ctx) {
         // Right
         else if (x == this.mapW - 1) img.src = "img/wall-r.png";
         // Normal wall
-        else img.src = "img/tile.jpg";
+        else img.src = rng.draw(TileMap.HOUSE_TILES);
         ctx.drawImage(img, xpos, ypos, this.tileW, this.tileH);
       } else {
-        ctx.fillStyle = "#5aa457";
-        ctx.fillRect(xpos, ypos, this.tileW, this.tileH);
+        var img = new Image();
+        img.src = "img/road.png";
+        ctx.drawImage(img, xpos, ypos, this.tileW, this.tileH);
       }
     }
   }

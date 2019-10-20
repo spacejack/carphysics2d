@@ -33,7 +33,7 @@ Game.prototype.getNextEndPosition = function([compareX, compareY]) {
       Math.sqrt(Math.pow(compareX - x, 2) + Math.pow(compareY - y, 2)) >
       Game.MIN_STARTEND_DELTA
   );
-  return ends[Math.floor(Math.random() * ends.length)];
+  return new Random().draw(ends);
 };
 
 Game.prototype.getRoadPositions = function() {
