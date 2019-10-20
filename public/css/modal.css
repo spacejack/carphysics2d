@@ -6,6 +6,7 @@
   padding-top: 100px; /* Location of the box */
   left: 0;
   top: 0;
+  margin: auto;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
@@ -14,7 +15,7 @@
 }
 .modal-content h1 {
   z-index: 2;
-  color: #111;
+  color: whitesmoke;
   font-family: "Helvetica Neue", sans-serif;
   font-size: 45px;
   font-weight: bold;
@@ -24,7 +25,7 @@
 }
 
 .modal-content h2 {
-  color: #111;
+  color: whitesmoke;
   font-family: "Open Sans", sans-serif;
   font-size: 30px;
   font-weight: 300;
@@ -34,32 +35,43 @@
 }
 
 .modal-content h3 {
-  color: #111;
+  color: whitesmoke;
   font-family: "Raleway", sans-serif;
   font-size: 30px;
   font-weight: 800;
   line-height: 36px;
-  margin: 0 0 24px;
+  margin: 0 0 4px;
   text-align: center;
 }
 .modal-content p {
-  color: #685206;
+  color: whitesmoke;
   font-family: "Helvetica Neue", sans-serif;
   font-size: 14px;
   line-height: 24px;
-  margin: 0 0 24px;
+  margin: 0 0 10px;
   text-align: justify;
   text-justify: inter-word;
+  text-align: center;
 }
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background: #0F2027;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  border: 3px solid #888;
+  width: 60%;
 }
-
+.modal-content .control-box {
+  display: block;
+  margin: auto;
+  width: 30%;
+  padding: 10px;
+  border: 0.5px solid gray;
+  border-radius: 20px;
+  margin-bottom: 30px;;
+}
 /* The Close Button */
 .close {
   color: #aaaaaa;

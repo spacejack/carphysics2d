@@ -245,6 +245,7 @@ Game.prototype.resize = function() {
 };
 
 Game.prototype.setInputKeyState = function(k, s) {
+  
   var p1 = this.players[0].inputs;
   if (k === 37)
     // arrow left
@@ -258,9 +259,11 @@ Game.prototype.setInputKeyState = function(k, s) {
   else if (k === 40)
     // arrow down
     p1.brake = s;
-  else if (k === 32)
+  else if (k === 32 && s == 1.0) {
     // space
-    p1.ebrake = s;
+    var audio = new Audio('../public/honks/honk' + Math.floor(Math.random() * 5 + 1) + '.m4a');
+    audio.play();
+  }
 
   if (this.numPlayers == 2) {
     var p2 = this.players[1].inputs;
@@ -281,6 +284,7 @@ Game.prototype.setInputKeyState = function(k, s) {
 
 Game.prototype.onKeyDown = function(k) {
   this.setInputKeyState(k.keyCode, 1.0);
+  
 };
 
 Game.prototype.onKeyUp = function(k) {
