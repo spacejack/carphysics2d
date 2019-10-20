@@ -1,7 +1,8 @@
 $(document).ready(function () {
-    $('#homePanelBtn').click(function () { 
-        END = true;
+    $('#gameOverModal').hide();
+    $('#homePanelBtn, #goToHome').click(function () { 
         toggleSidebar();
+        $('#gameOverModal').hide();
         $('#menuWrapper').show();
         $('#game_container').hide();
     });

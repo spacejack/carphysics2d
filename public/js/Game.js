@@ -100,7 +100,7 @@ Game.prototype.setUpGame = function() {
 
 Game.prototype.gameOver = function(loser = undefined) {
   this.gameIsOver = true;
-
+  $('#gameOverModal').show();
   let text;
   if (loser) text = "YOU LOSE, Player " + loser.id + "!";
   else {
@@ -261,7 +261,7 @@ Game.prototype.setInputKeyState = function(k, s) {
     p1.brake = s;
   else if (k === 32 && s == 1.0) {
     // space
-    var audio = new Audio('../public/honks/honk' + Math.floor(Math.random() * 5 + 1) + '.m4a');
+    var audio = new Audio('../public/honks/honk' + Math.floor(Math.random() * 6 + 1) + '.m4a');
     audio.play();
   }
 

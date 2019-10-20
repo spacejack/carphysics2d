@@ -121,6 +121,5 @@ App.prototype.resize = function() {
   if (this.game) this.game.resize();
 };
 var PAUSE = true;
-var END = false;
 var RESTART = false;
 var NUM_ROUNDS;

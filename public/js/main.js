@@ -4,8 +4,9 @@
 
 //  Boot up the app
 $(document).ready(function () {
-    $('#playBtn').click(function (e) {
+    $('#playBtn, #playAgainBtn').click(function (e) {
         $('#playModal').css('display', 'none');
+        $('#gameOverModal').hide();
         $('#menuWrapper').hide();
         $('#game_container').show();
         $('#menu__toggler').show();
@@ -14,4 +15,3 @@ $(document).ready(function () {
     });
     
 });
-// window.addEventListener('load', function(){App.run();}, false);
