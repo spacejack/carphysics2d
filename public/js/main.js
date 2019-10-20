@@ -10,7 +10,6 @@ $(document).ready(function () {
         $('#game_container').show();
         $('#menu__toggler').show();
         PAUSE = false;
-        END = false;
         App.run();
     });
     

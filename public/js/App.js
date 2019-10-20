@@ -11,6 +11,8 @@ var App = function() {
   this.tileMap = null;
   this.tileImage = null;
   this.prevT = 0; // previous frame timestamp (millisecs)
+  console.log('fuck neeeeeeee');
+
 };
 
 App._instance = null;
@@ -20,6 +22,7 @@ App.run = function() {
   if (App._instance && !RESTART) return;
   App._instance = new App();
   App._instance.init();
+  console.log(App._instance && !RESTART);
 };
 
 App.prototype.init = function() {
@@ -32,13 +35,8 @@ App.prototype.init = function() {
 
   //  Resize now to make canvas correct size
   this.resize();
-
-  //  Load assets
-  this.tileImage = new Image();
-  this.tileImage.onload = function() {
-    that.onAssetsLoaded();
-  };
-  this.tileImage.src = "../img/tile.jpg";
+  that.onAssetsLoaded();
+  
 };
 
 App.prototype.onAssetsLoaded = function() {
@@ -101,9 +99,7 @@ App.prototype.doFrame = function() {
   // Keep the animation loop going
   var that = this;
   requestAnimationFrame(function() {
-    if (END) {
-      return;
-    } else if (!PAUSE) {
+    if (!PAUSE) {
       that.doFrame();
     }
   });
