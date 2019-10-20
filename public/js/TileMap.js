@@ -49,18 +49,22 @@ TileMap.prototype.render = function(ctx) {
       else if (tile == 0) {
         var img = new Image();
         // Top left
-        if (x == 0 && y == 0) img.src = "img/tile.jpg";
+        if (x == 0 && y == 0) img.src = "img/wall-tl.png";
         // Bottom left
-        else if (x == 0 && y == this.mapH - 1) img.src = "img/tile.jpg";
+        else if (x == 0 && y == this.mapH - 1) img.src = "img/wall-bl.png";
         // Top right
-        else if (x == this.mapW - 1 && y == 0) img.src = "img/tile.jpg";
+        else if (x == this.mapW - 1 && y == 0) img.src = "img/wall-tr.png";
         // Bottom right
         else if (x == this.mapW - 1 && y == this.mapH - 1)
-          img.src = "img/tile.jpg";
-        // Top or bottom
-        else if (y == 0 || y == this.mapH - 1) img.src = "img/wall-y.png";
-        // Left or right
-        else if (x == 0 || x == this.mapW - 1) img.src = "img/wall-x.png";
+          img.src = "img/wall-br.png";
+        // Top
+        else if (y == 0) img.src = "img/wall-t.png";
+        // Bottom
+        else if (y == this.mapH - 1) img.src = "img/wall-b.png";
+        // Left
+        else if (x == 0) img.src = "img/wall-l.png";
+        // Right
+        else if (x == this.mapW - 1) img.src = "img/wall-r.png";
         // Normal wall
         else img.src = "img/tile.jpg";
         ctx.drawImage(img, xpos, ypos, this.tileW, this.tileH);
