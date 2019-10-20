@@ -17,7 +17,7 @@ App._instance = null;
 
 App.run = function() {
   // singleton - only 1 instance
-  if (App._instance) return;
+  if (App._instance && !RESTART) return;
   App._instance = new App();
   App._instance.init();
 };
@@ -95,7 +95,11 @@ App.prototype.doFrame = function() {
   // Keep the animation loop going
   var that = this;
   requestAnimationFrame(function() {
-    that.doFrame();
+    if(END) {
+      return;
+    }else if (!PAUSE) {
+      that.doFrame();
+    }
   });
 };
 
@@ -114,3 +118,6 @@ App.prototype.resize = function() {
   //  Notify the game that resize happened
   if (this.game) this.game.resize();
 };
+var PAUSE = true;
+var END = false;
+var RESTART = false;

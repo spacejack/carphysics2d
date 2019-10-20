@@ -1,4 +1,4 @@
-/*global $e, Car, InputState, ConfigPanel, Stats, TileMap */
+/*global $e, Car, InputState, TileMap */
 
 "use strict";
 
@@ -49,21 +49,14 @@ var Game = function(opts) {
   //  Holds keystates
   this.inputs = new InputState();
 
-  //  Displays useful car physics data
-  this.stats = new Stats();
-
   //  Instance of our car
-  this.car = new Car({
-    stats: this.stats,
-  });
+  this.car = new Car();
   this.reset();
 
   // Ghost cars
   this.ghostCars = [];
   this.counter = 0;
 
-  //  Configuration panel for the car
-  this.configPanel = new ConfigPanel(this.car);
 };
 
 Game.DRAW_SCALE = 20.0; // 1m = 25px
@@ -216,10 +209,6 @@ Game.prototype.render = function() {
   if (tileX == this.endX && tileY == this.endY) this.reachedEnd();
 
   this.ctx.restore();
-
-  //  Stats rendered to DOM
-  this.stats.render();
-
   // Increase the ghost car counter
   this.counter++;
 };

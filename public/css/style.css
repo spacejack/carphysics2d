@@ -109,21 +109,6 @@ a:hover
 	bottom: 3px;
 }
 
-.config_block
-{
-	background: rgba(0,0,0,0.5);
-	position: absolute;
-	left: 0px;
-	bottom: 0px;
-}
-
-.stats_block
-{
-	background: rgba(0,0,0,0.5);
-	position: absolute;
-	right: 0px;
-	bottom: 0px;
-}
 
 .panel_tab
 {
@@ -248,7 +233,7 @@ body {
   align-items: center;
 }
 
-h1 {
+main h1 {
   color: #fafafa;
   mix-blend-mode: overlay;
 }
