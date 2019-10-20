@@ -72,6 +72,24 @@
   border-radius: 20px;
   margin-bottom: 30px;;
 }
+.modal-content form label {
+  width: 250px;
+  font-size: 20px;
+  display: inline-block;
+  text-align: center;
+}
+.modal-content form input {
+  padding: 10px;
+  margin-bottom: 20px;;
+}
+.modal-content .modal-header {
+  width: 100%;
+  height: 50px;
+}
+.modal-content .modal-header h3{
+  display: inline-block;
+}
+
 /* The Close Button */
 .close {
   color: #aaaaaa;

@@ -8,6 +8,8 @@
     <link type="text/css" rel="stylesheet" href="./css/main.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="./css/modal.css" media="screen" />
     <link type="text/css" rel="stylesheet" href="./css/style.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="./css/slider.css" media="screen" />
+    
     <script src="./js/jquery/jquery-3.4.1.min.js"></script>
     <script src="./js/modal.js" type="text/javascript"></script>
     <script src="./js/main-menu.js" type="text/javascript"></script>
@@ -19,6 +21,7 @@
     <script type="text/javascript" src="./js/InputState.js"></script>
     <script type="text/javascript" src="./js/Car.js"></script>
     <script type="text/javascript" src="./js/TileMap.js"></script>
+    <script type="text/javascript" src="./js/music.js"></script>
     <script type="text/javascript" src="./js/Game.js"></script>
     <script type="text/javascript" src="./js/App.js"></script>
     <script type="text/javascript" src="./js/navigation.js"></script>
@@ -68,11 +71,22 @@
     <div id="settingsModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-            <span class="close" id='closeSettingsModal'>&times;</span>
+            <div class="modal-header">
+                <h3>Settings</h3>
+                    <span class="close" id='closeSettingsModal'>&times;</span>
+            </div>
+            <div class="push-down"></div>
             <form>
                     <label>Number of rounds: </label>
                     <input type="text" id="numInpt"/><br/>
-                    <input type="button" value="Save" id="saveButton"/>
+                    <label>Player 0 name: </label>
+                    <input type="text" id="player0name"/><br/>
+                    <label>Player 1 name: </label>
+                    <input type="text" id="player1name"/><br/>
+                    <label>Music Volume </label><br/>
+                    <input type="range" min="1" max="100" value="50" class="slider" id="myRange"><br/>
+                    <a class="button2" id="saveButton">Save</a>
+
             </form>
             
         </div>
@@ -104,7 +118,7 @@
     <div id="gameOverModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
-            <h1>U died!</h1>
+            <h1 class="game-over-text"></h1>
             <h3>Play again?</h3>
             <a onclick="toggleToSingleMode()" class="button2 active-mode" id="single-toggle-again">Single Player</a>
             <a onclick="toggleToMultiMode()" class="button2" id="multi-toggle-again">Multi Player</a><br />

@@ -11,8 +11,6 @@ var App = function() {
   this.tileMap = null;
   this.tileImage = null;
   this.prevT = 0; // previous frame timestamp (millisecs)
-  console.log('fuck neeeeeeee');
-
 };
 
 App._instance = null;
@@ -70,7 +68,7 @@ App.prototype.onAssetsLoaded = function() {
   );
 
   this.prevT = Date.now();
-
+  startMusic();
   //  Start animation loop
   requestAnimationFrame(function() {
     that.doFrame();
