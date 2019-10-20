@@ -6,211 +6,235 @@
  *  Game class
  */
 var Game = function(opts) {
-  // canvas element that the game draws to
-  this.canvas = opts.canvas;
-
   //  Acquire a drawing context from the canvas
+  this.canvas = opts.canvas;
   this.ctx = this.canvas.getContext("2d");
   this.canvasWidth = this.canvas.clientWidth;
   this.canvasHeight = this.canvas.clientHeight;
+  // Set up the map area and compute tile parameters
   this.mapW = 16;
   this.mapH = 10;
-  this.map = createMap(
-    this.mapH,
-    this.mapW,
-    Math.ceil(Math.max(this.mapW, this.mapH) * 2.0)
-  );
-
   this.tileW = Math.ceil(this.canvasWidth / this.mapW);
   this.tileH = Math.ceil(this.canvasHeight / this.mapH);
+  // Initialize a game
+  this.numRounds = opts.numRounds;
+  this.numPlayers = opts.numPlayers;
+  this.gameIsOver = false;
+  this.setUpGame();
+};
 
-  this.possibleStartPositions = this.map
-    .map((row, ridx) =>
-      row.map((col, cidx) => (col == 1 ? [cidx, ridx] : null))
-    )
+Game.DRAW_SCALE = 25.0; // 1m = 25px
+Game.MIN_STARTEND_DELTA = 5.0;
+Game.PLAYER_COLORS = ["rgb(228,93,51)", "rgb(102,172,91)", "rgb(244,163,58)"];
+Game.PLAYER_CAR_SPRITES = ["dorange", "green", "orange"].map(
+  c => `img/car-${c}.png`
+);
+
+Game.prototype.getNextEndPosition = function([compareX, compareY]) {
+  const ends = this.getRoadPositions(this.map).filter(
+    ([x, y]) =>
+      Math.sqrt(Math.pow(compareX - x, 2) + Math.pow(compareY - y, 2)) >
+      Game.MIN_STARTEND_DELTA
+  );
+  return new Random().draw(ends);
+};
+
+Game.prototype.getRoadPositions = function() {
+  return this.map
+    .map((row, rid) => row.map((col, cid) => (col == 1 ? [cid, rid] : null)))
     .flat()
     .filter(x => x !== null)
     .sort(() => Math.random() - 0.5);
-  this.possibleEndPositions = [...this.possibleStartPositions];
+};
 
-  //  Scrolling background
+Game.prototype.setUpGame = function() {
+  // Generate map
+  const mapComplexity = Math.ceil(Math.max(this.mapW, this.mapH) * 2.0);
+  this.map = createMap(this.mapH, this.mapW, mapComplexity);
+  // Generate the start position and all end positions, one for each turn
+  this.roadPositions = this.getRoadPositions();
+  this.startPosition = this.roadPositions.pop();
+  this.endPositions = [this.getNextEndPosition(this.startPosition)];
+  for (var i = 1; i < this.numRounds; i++) {
+    this.endPositions.push(this.getNextEndPosition(this.endPositions[i - 1]));
+  }
+
+  // Initialize players
+  this.players = [];
+  const [startX, startY] = this.startPosition;
+  for (let i = 0; i < this.numPlayers; i++) {
+    const p = new Player({
+      id: i,
+      car: new Car({ imgSrc: Game.PLAYER_CAR_SPRITES[i] }),
+      color: Game.PLAYER_COLORS[i],
+      ghosts: [],
+      ghostCounter: 0,
+      round: 0,
+      inputs: new InputState(),
+    });
+    p.car.position.x =
+      (-this.canvasWidth / 2 + startX * this.tileW + this.tileW / 2) /
+      Game.DRAW_SCALE;
+    p.car.position.y =
+      (-this.canvasHeight / 2 +
+        (this.mapH - startY) * this.tileH -
+        (this.tileH / (this.numPlayers + 1)) * (i + 1)) /
+      Game.DRAW_SCALE;
+    this.players.push(p);
+  }
+
+  // Set up the TileMap and other necessary props
   this.tileMap = new TileMap({
     map: this.map,
-    tileImage: opts.tileImage,
     viewportWidth: this.canvasWidth,
     viewportHeight: this.canvasHeight,
     mapW: this.mapW,
     mapH: this.mapH,
     tileW: this.tileW,
     tileH: this.tileH,
-    startPosition: [0, 0],
+    startPosition: this.startPosition,
+    endPositions: this.endPositions,
+    players: this.players,
   });
-
-  //  Holds keystates
-  this.inputs = new InputState();
-
-  //  Instance of our car
-  this.car = new Car();
-  this.reset();
-
-  // Ghost cars
-  this.ghostCars = [];
-  this.counter = 0;
-
 };
 
-Game.DRAW_SCALE = 20.0; // 1m = 25px
+Game.prototype.gameOver = function(loser = undefined) {
+  this.gameIsOver = true;
 
-Game.prototype.getRandomStartPosition = function() {
-  return this.possibleStartPositions.pop();
-};
-
-Game.prototype.getRandomEndPosition = function() {
-  return this.possibleEndPositions[
-    Math.floor(Math.random() * this.possibleEndPositions.length)
-  ];
-};
-
-Game.prototype.reset = function() {
-  if (this.possibleStartPositions.length > 0) {
-    [this.startX, this.startY] = this.getRandomStartPosition();
-    [this.endX, this.endY] = this.getRandomEndPosition();
-    this.tileMap.startX = this.startX;
-    this.tileMap.startY = this.startY;
-    this.tileMap.endX = this.endX;
-    this.tileMap.endY = this.endY;
-    this.car.position.x =
-      (-this.canvasWidth / 2 + this.startX * this.tileW + this.tileW / 2) /
-      Game.DRAW_SCALE;
-    this.car.position.y =
-      (-this.canvasHeight / 2 +
-        (this.mapH - this.startY) * this.tileH -
-        this.tileH / 2) /
-      Game.DRAW_SCALE;
-    this.car.heading = 0.0;
-  } else {
-    this.gameOver();
+  let text;
+  if (loser) text = "YOU LOSE, Player " + loser.id + "!";
+  else {
+    const winner = this.players.filter(p => p.round == this.numRounds)[0];
+    text = "YOU WIN, Player " + winner.id + "!";
   }
-  this.car.velocity.x = 0.0;
-  this.car.velocity.y = 0.0;
-  this.car.route = [];
-  this.counter = 0;
-};
-
-Game.prototype.reachedEnd = function() {
-  var c = new Car({});
-  c.route = [...this.car.route];
-  c.followingRoute = true;
-  this.car.route = [];
-  this.ghostCars.push(c);
-  this.reset();
-};
-
-Game.prototype.gameOver = function() {
-  this.ghostCars = [];
-  this.car.velocity.x = 0;
-  this.car.velocity.y = 0;
 
   this.ctx.save();
-  this.ctx.fillStyle = "#000";
-  this.ctx.textAlign = "center";
   this.ctx.scale(1, -1);
-  this.ctx.strokeStyle = "#fff";
-  this.ctx.strokeText("GAME OVER", 0, 0);
-  this.ctx.fillText("GAME OVER", 0, 0);
+  this.ctx.font = "6px Sans-serif";
+  this.ctx.lineWidth = 0.5;
+  this.ctx.strokeStyle = "white";
+  this.ctx.textAlign = "center";
+  this.ctx.strokeText(text, 0, 0);
+  this.ctx.fillStyle = "black";
+  this.ctx.fillText(text, 0, 0);
   this.ctx.restore();
 };
 
 /**  Update game logic by delta T (millisecs) */
 Game.prototype.update = function(dt) {
-  this.car.setInputs(this.inputs);
-  this.car.update(dt);
+  if (this.gameIsOver) return;
+
+  for (var p of this.players) {
+    p.car.setInputs(p.inputs);
+    p.car.update(dt);
+  }
 };
 
 /**  Render the scene */
 Game.prototype.render = function() {
-  //  Clear the canvas
-  //this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+  if (this.gameIsOver) return;
 
   this.ctx.save();
+  const s = Game.DRAW_SCALE;
 
-  var s = Game.DRAW_SCALE;
-
-  //  Render ground (covers screen so no need to clear)
+  // Render ground (covers screen so no need to clear)
   this.tileMap.render(this.ctx);
 
-  //  Render the car.
-  //  Set axis at centre of screen and y axis up.
+  // Set axis at centre of screen and y axis up.
   this.ctx.translate(this.canvasWidth / 2.0, this.canvasHeight / 2.0);
   this.ctx.scale(s, -s);
-  this.car.render(this.ctx);
 
-  // Initialize variables for collision detection
-  var carX = this.car.position.x * s;
-  var carY = this.car.position.y * s;
+  const allGhosts = this.players
+    .map(p =>
+      p.ghosts.map(
+        ghostCar =>
+          ghostCar.route[Math.min(p.ghostCounter, ghostCar.route.length - 1)]
+      )
+    )
+    .flat();
 
-  // Render other cars
-  for (var ghostCar of this.ghostCars) {
-    var [x, y, heading] = ghostCar.route[
-      Math.min(this.counter, ghostCar.route.length - 1)
-    ];
-    ghostCar.position.x = x;
-    ghostCar.position.y = y;
-    ghostCar.heading = heading;
-    ghostCar.render(this.ctx);
+  // Render all players and their ghosts
+  for (var p of this.players) {
+    // Player has finished all round
+    if (p.round == this.numRounds) {
+      return this.gameOver();
+    }
+
+    p.car.render(this.ctx);
+
+    // Initialize variables for collision detection
+    var carX = p.car.position.x * s;
+    var carY = p.car.position.y * s;
+
+    // Render ghost cars
+    for (let ghostCar of p.ghosts) {
+      var [x, y, heading] = ghostCar.route[
+        Math.min(p.ghostCounter, ghostCar.route.length - 1)
+      ];
+      ghostCar.position.x = x;
+      ghostCar.position.y = y;
+      ghostCar.heading = heading;
+      ghostCar.render(this.ctx);
+    }
 
     // Collision detection for ghost cars
-    var distFromCar = Math.sqrt(
-      Math.pow(Math.abs(x - this.car.position.x), 2) +
-        Math.pow(Math.abs(y - this.car.position.y), 2)
-    );
-    if (distFromCar < 1.5) {
-      console.log("COLLISION");
-      this.gameOver();
-    }
-  }
-
-  // Detect collision with walls
-  var tileX = Math.floor(this.mapW / 2 + carX / this.tileW);
-  var tileY = this.mapH - Math.floor(this.mapH / 2 + carY / this.tileH) - 1;
-  if (tileX >= this.mapW) tileX = this.mapW - 1;
-  else if (tileX < 0) tileX = 0;
-  if (tileY >= this.mapH) tileY = this.mapH - 1;
-  else if (tileY < 0) tileY = 0;
-  var tile = this.map[tileY][tileX];
-
-  if (tile == 0) {
-    var diffX_left = tileX * this.tileW - this.canvasWidth / 2 - carX;
-    var diffX_right = (tileX + 1) * this.tileW - this.canvasWidth / 2 - carX;
-    var diffX = Math.min(Math.abs(diffX_left), Math.abs(diffX_right));
-    var diffY_bottom = this.canvasHeight / 2 - tileY * this.tileH - carY;
-    var diffY_top = this.canvasHeight / 2 - (tileY + 1) * this.tileH - carY;
-    var diffY = Math.min(Math.abs(diffY_bottom), Math.abs(diffY_top));
-    this.car.velocity.y = -0.3 * this.car.velocity.y;
-    this.car.velocity.x = -0.3 * this.car.velocity.x;
-    if (diffX < diffY) {
-      // Hit on x axis
-      if (Math.abs(diffX_left) < Math.abs(diffX_right)) {
-        this.car.position.x += -0.1;
-      } else {
-        this.car.position.x += 0.1;
-      }
-    } else {
-      // Hit on y axis
-      if (Math.abs(diffY_bottom) < Math.abs(diffY_top)) {
-        this.car.position.y += 0.1;
-      } else {
-        this.car.position.y += -0.1;
+    for (let ghostCoords of allGhosts) {
+      var [x, y, heading] = ghostCoords;
+      var distFromCar = Math.sqrt(
+        Math.pow(Math.abs(x - p.car.position.x), 2) +
+          Math.pow(Math.abs(y - p.car.position.y), 2)
+      );
+      if (distFromCar < 1.5) {
+        return this.gameOver(p);
       }
     }
-  }
 
-  // End
-  if (tileX == this.endX && tileY == this.endY) this.reachedEnd();
+    // Detect collision with walls
+    var tileX = Math.floor(this.mapW / 2 + carX / this.tileW);
+    var tileY = this.mapH - Math.floor(this.mapH / 2 + carY / this.tileH) - 1;
+    if (tileX >= this.mapW) tileX = this.mapW - 1;
+    else if (tileX < 0) tileX = 0;
+    if (tileY >= this.mapH) tileY = this.mapH - 1;
+    else if (tileY < 0) tileY = 0;
+    var tile = this.map[tileY][tileX];
+
+    if (tile == 0) {
+      var diffX_left = tileX * this.tileW - this.canvasWidth / 2 - carX;
+      var diffX_right = (tileX + 1) * this.tileW - this.canvasWidth / 2 - carX;
+      var diffX = Math.min(Math.abs(diffX_left), Math.abs(diffX_right));
+      var diffY_bottom = this.canvasHeight / 2 - tileY * this.tileH - carY;
+      var diffY_top = this.canvasHeight / 2 - (tileY + 1) * this.tileH - carY;
+      var diffY = Math.min(Math.abs(diffY_bottom), Math.abs(diffY_top));
+      p.car.velocity.y = -0.3 * p.car.velocity.y;
+      p.car.velocity.x = -0.3 * p.car.velocity.x;
+      if (diffX < diffY) {
+        // Hit on x axis
+        if (Math.abs(diffX_left) < Math.abs(diffX_right)) {
+          p.car.position.x += -0.1;
+        } else {
+          p.car.position.x += 0.1;
+        }
+      } else {
+        // Hit on y axis
+        if (Math.abs(diffY_bottom) < Math.abs(diffY_top)) {
+          p.car.position.y += 0.1;
+        } else {
+          p.car.position.y += -0.1;
+        }
+      }
+    }
+
+    // End
+    const [endX, endY] = p.getEndPosition(this.endPositions);
+    if (tileX == endX && tileY == endY) {
+      p.reachedEnd();
+    }
+
+    // Increase the ghost car counter
+    p.ghostCounter++;
+  }
 
   this.ctx.restore();
-  // Increase the ghost car counter
-  this.counter++;
 };
 
 Game.prototype.resize = function() {
@@ -221,22 +245,38 @@ Game.prototype.resize = function() {
 };
 
 Game.prototype.setInputKeyState = function(k, s) {
-  var i = this.inputs;
+  var p1 = this.players[0].inputs;
   if (k === 37)
     // arrow left
-    i.left = s;
+    p1.left = s;
   else if (k === 39)
     // arrow right
-    i.right = s;
+    p1.right = s;
   else if (k === 38)
     // arrow up
-    i.throttle = s;
+    p1.throttle = s;
   else if (k === 40)
     // arrow down
-    i.brake = s;
+    p1.brake = s;
   else if (k === 32)
     // space
-    i.ebrake = s;
+    p1.ebrake = s;
+
+  if (this.numPlayers == 2) {
+    var p2 = this.players[1].inputs;
+    if (k === 65)
+      // A
+      p2.left = s;
+    else if (k === 68)
+      // D
+      p2.right = s;
+    else if (k === 87)
+      // W
+      p2.throttle = s;
+    else if (k === 83)
+      // S
+      p2.brake = s;
+  }
 };
 
 Game.prototype.onKeyDown = function(k) {

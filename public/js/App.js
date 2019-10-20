@@ -47,7 +47,9 @@ App.prototype.onAssetsLoaded = function() {
   $e("loading_block").style.display = "none";
 
   //  Create game instance
-  this.game = new Game({ canvas: this.canvas, tileImage: this.tileImage });
+  this.game = new Game({ canvas: this.canvas, numRounds: 5, numPlayers: 2 });
+  // Bind to window
+  window.game = this.game;
 
   //  Set up key listeners
   document.addEventListener(
