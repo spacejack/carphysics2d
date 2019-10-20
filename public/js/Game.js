@@ -171,7 +171,10 @@ Game.prototype.render = function() {
       Math.pow(Math.abs(x - this.car.position.x), 2) +
         Math.pow(Math.abs(y - this.car.position.y), 2)
     );
-    if (distFromCar < 1.5) {
+    var distSin = Math.abs(Math.abs(Math.sin(heading)) - Math.abs(Math.sin(this.car.heading)));
+    var relativeDist = 0.8 + (distSin * 0.9);
+    
+    if (distFromCar < relativeDist) {
       console.log("COLLISION");
       this.gameOver();
     }
