@@ -6,12 +6,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>spacejack.ca / 2D Car Physics</title>
 	<link type="text/css" rel="stylesheet" href="css/style.css" media="screen"/>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+        
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            accesskey="" 
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
 	<script type="text/javascript" src="js/domutil.js"></script>
 	<script type="text/javascript" src="js/GMath.js"></script>
 	<script type="text/javascript" src="js/Vec2.js"></script>
 	<script type="text/javascript" src="js/InputState.js"></script>
 	<script type="text/javascript" src="js/Car.js"></script>
-	<script type="text/javascript" src="js/TileMap.js"></script>
+	<script type="text/javascript" src="js/Map.js"></script>
 	<script type="text/javascript" src="js/ConfigPanel.js"></script>
 	<script type="text/javascript" src="js/Stats.js"></script>
 	<script type="text/javascript" src="js/Game.js"></script>
@@ -38,8 +48,10 @@
 
 <body>
 
+<div id="mapContainer"></div>
+  
 <div id="game_container" class="game_container">
-
+  
 	<div id="game" class="webgame">
 
 		<canvas id="game_canvas" class="game_canvas"></canvas>

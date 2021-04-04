@@ -9,7 +9,7 @@ var App = function()
 {
 	this.canvas = $e('game_canvas');
 	this.game = null;   // instance of the GameEngine
-	this.tileMap = null;
+	this.map = null;
 	this.tileImage = null;
 	this.prevT = 0;		// previous frame timestamp (millisecs)
 };

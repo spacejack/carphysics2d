@@ -24,6 +24,14 @@ var Car = function( opts )
 {
 	opts = opts || {};
 
+  // constants for converting map position to lat/long
+  this.TWO_PI = 2*Math.PI;
+  this.HALF_PI = Math.PI/2;
+  this.EARTH_RADIUS = 6378137;
+  this.RAD2DEG = Math.PI / 180;
+  this.DEG2RAD = 180 / Math.PI;
+  this.SECS_PER_RADIAN = 60 / (this.TWO_PI);
+    
 	//  Car state variables
 	this.heading = opts.heading || 0.0;  // angle car is pointed at (radians)
 	this.position = new Vec2(opts.x, opts.y);  // metres in world coords
@@ -56,6 +64,9 @@ var Car = function( opts )
 	//  Setup car configuration
 	this.config = new Car.Config(opts.config);
 	this.setConfig();
+  
+  this.latlong = opts.position;
+  this.speed = 0;
 };
 
 /**
@@ -198,6 +209,10 @@ Car.prototype.doPhysics = function( dt )
 	//  finally we can update position
 	this.position.x += this.velocity.x * dt;
 	this.position.y += this.velocity.y * dt;
+  
+  // Update lat long
+  var direction = ((this.HALF_PI)-this.heading) % (this.TWO_PI);
+  this.updateLatLong(this.velocity_c.x*dt, direction);
 
 	//  Display some data
 	this.stats.clear();  // clear this every tick otherwise it'll fill up fast
@@ -210,6 +225,31 @@ Car.prototype.doPhysics = function( dt )
 	this.stats.add('slipAngleRear', slipAngleRear);
 	this.stats.add('frictionFront', frictionForceFront_cy);
 	this.stats.add('frictionRear', frictionForceRear_cy);
+  this.stats.add('latitude', this.latlong[0]);
+  this.stats.add('longitude', this.latlong[1]);
+};
+
+Car.prototype.updateLatLong = function(distance, bearing)
+{
+    var δ = distance / this.EARTH_RADIUS; 
+    var θ = bearing;
+
+    var φ1 = this.latlong[0] * this.RAD2DEG;
+    var λ1 = this.latlong[1] * this.RAD2DEG;
+
+    var sinφ1 = Math.sin(φ1), cosφ1 = Math.cos(φ1);
+    var sinδ = Math.sin(δ), cosδ = Math.cos(δ);
+    var sinθ = Math.sin(θ), cosθ = Math.cos(θ);
+
+    var sinφ2 = sinφ1*cosδ + cosφ1*sinδ*cosθ;
+    var φ2 = Math.asin(sinφ2);
+    var y = sinθ * sinδ * cosφ1;
+    var x = cosδ - sinφ1 * sinφ2;
+    var λ2 = λ1 + Math.atan2(y, x);
+
+    var latitude =  φ2 * this.DEG2RAD;
+    var longitude = ((λ2 * this.DEG2RAD)+540)%360-180;
+    this.latlong = [latitude, longitude];
 };
 
 /**

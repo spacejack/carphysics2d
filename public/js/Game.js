@@ -15,12 +15,12 @@ var Game = function( opts )
 	this.canvasWidth = this.canvas.clientWidth;
 	this.canvasHeight = this.canvas.clientHeight;
 
-	//  Scrolling background
-	this.tileMap = new TileMap({
-		tileImage: opts.tileImage,
-		viewportWidth: this.canvasWidth,
-		viewportHeight: this.canvasHeight
-	});
+	// Map background
+  var london = [51.509865, -0.118092];
+	this.map = new Map(
+		'mapContainer',
+    london
+	);
 
 	//  Holds keystates
 	this.inputs = new InputState();
@@ -29,7 +29,7 @@ var Game = function( opts )
 	this.stats = new Stats();
 
 	//  Instance of our car
-	this.car = new Car({stats:this.stats});
+	this.car = new Car({stats:this.stats, position:london});
 
 	//  Configuration panel for the car
 	this.configPanel = new ConfigPanel(this.car);
@@ -49,14 +49,14 @@ Game.prototype.update = function( dt )
 Game.prototype.render = function()
 {
 	//  Clear the canvas
-	//this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+	this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
 	this.ctx.save();
 
 	var s = Game.DRAW_SCALE;
 
-	//  Render ground (covers screen so no need to clear)
-	this.tileMap.render(this.ctx, -this.car.position.x * s, this.car.position.y * s);
+	//  Move the map to new position
+	this.map.moveTo(this.car.latlong);
 
 	//  Render the car.
 	//  Set axis at centre of screen and y axis up.
@@ -75,8 +75,6 @@ Game.prototype.resize = function()
 {
 	this.canvasWidth = this.canvas.clientWidth;
 	this.canvasHeight = this.canvas.clientHeight;
-	// Notify TileMap that resize happened
-	this.tileMap.resize(this.canvasWidth, this.canvasHeight);
 };
 
 Game.prototype.setInputKeyState = function( k, s )
